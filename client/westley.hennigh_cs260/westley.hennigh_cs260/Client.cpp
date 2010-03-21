@@ -199,7 +199,7 @@ int Client::Connect(std::string username_)
 
   if(kitten->my_type == RequestForUsername_Msg)
   {
-    UsernameMsg username_message(Username_Msg);
+    UsernameMsg username_message;
     username_message.myname = username;
 
     ret = username_message.WriteOut(buffer);

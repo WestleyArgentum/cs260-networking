@@ -7,6 +7,8 @@
 #define SOCKET_H
 
 class Socket
-{};
+{
+	Socket();
+};
 
 #endif

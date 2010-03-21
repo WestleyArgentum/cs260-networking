@@ -77,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			case RemoveUser_Msg:
 				{
 					int pos = SendMessage(listbox, LB_FINDSTRING, -1, (LPARAM)(static_cast<RemoveUserMsg*>(message)->user.c_str()));
-					SendMessage(listbox, LB_DELETESTRING, pos - 1, NULL);
+					SendMessage(listbox, LB_DELETESTRING, pos, NULL);
 					break;
 				}
 
@@ -141,7 +141,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				memset(buffer, 0, STD_BUFF_SIZE - 1);
 				charcount = (int)SendMessage(edit, WM_GETTEXT, STD_BUFF_SIZE - 1, (LPARAM)buffer);
 
-				ChatDataMsg new_message(ChatData_Msg);
+				ChatDataMsg new_message;
 				new_message.text = zclient->GetUsername();
 				new_message.text.append(": ");
 				new_message.text.append(buffer, charcount);
