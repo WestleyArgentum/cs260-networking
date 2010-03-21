@@ -171,11 +171,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\shared_source\Message.cpp"
+				RelativePath=".\Message.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\shared_source\Message.hpp"
+				RelativePath=".\Message.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Socket.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Socket.hpp"
 				>
 			</File>
 		</Filter>

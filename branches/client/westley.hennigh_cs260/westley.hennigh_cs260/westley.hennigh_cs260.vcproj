@@ -269,19 +269,19 @@
 			Name="Sockets"
 			>
 			<File
-				RelativePath="..\..\..\shared_source\Message.cpp"
+				RelativePath="..\..\..\server\westley.hennigh_server\westley.hennigh_server\Message.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\shared_source\Message.hpp"
+				RelativePath="..\..\..\server\westley.hennigh_server\westley.hennigh_server\Message.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\shared_source\Socket.cpp"
+				RelativePath="..\..\..\server\westley.hennigh_server\westley.hennigh_server\Socket.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\shared_source\Socket.hpp"
+				RelativePath="..\..\..\server\westley.hennigh_server\westley.hennigh_server\Socket.hpp"
 				>
 			</File>
 		</Filter>
