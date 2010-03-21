@@ -70,7 +70,7 @@ struct IMessage
 
 struct UsernameMsg : public IMessage
 {
-	UsernameMsg (Message_Type type) : IMessage(type) {}
+	UsernameMsg () : IMessage(Username_Msg) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{
@@ -95,7 +95,7 @@ struct UsernameMsg : public IMessage
 
 struct ChatDataMsg : public IMessage
 {
-	ChatDataMsg (Message_Type type) : IMessage(type) { /*memset(text, 0, 256);*/ }
+	ChatDataMsg () : IMessage(ChatData_Msg) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{
@@ -120,7 +120,7 @@ struct ChatDataMsg : public IMessage
 
 struct RemoveUserMsg : public IMessage
 {
-	RemoveUserMsg (Message_Type type) : IMessage(type) {}
+	RemoveUserMsg () : IMessage(RemoveUser_Msg) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{

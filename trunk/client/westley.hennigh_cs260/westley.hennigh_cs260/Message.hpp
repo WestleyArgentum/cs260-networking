@@ -22,7 +22,16 @@ enum Message_Type
 
 /*
 Much as I despise object based message systems, at this point I don't believe I have any
-alternatives that would be better.
+alternatives that would be better. The solution, as I see it, would be to create a
+message system that utilized function binding. The only reasonable way to do that would
+be to incorporate both the server and client into one program (indeed literally into one
+thing) (because how else could you ensure that the functions you want to call exist).
+This approach would actually be very powerful because the superficial distinction between
+server and client will be torn away. Instead each node is a client when it is asking or
+sending new data and each is a server when it is responding.
+
+The major block to this is the shitty windows framework we are provided with. I am not
+going to waste time trying to get the server to work in it.
 
 Derive your message from IMessage and give it whatever data you want, then add your name
 to the enum...
@@ -61,7 +70,7 @@ struct IMessage
 
 struct UsernameMsg : public IMessage
 {
-	UsernameMsg (Message_Type type) : IMessage(type) {}
+	UsernameMsg () : IMessage(Username_Msg) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{
@@ -86,7 +95,7 @@ struct UsernameMsg : public IMessage
 
 struct ChatDataMsg : public IMessage
 {
-	ChatDataMsg (Message_Type type) : IMessage(type) { /*memset(text, 0, 256);*/ }
+	ChatDataMsg () : IMessage(ChatData_Msg) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{
@@ -105,13 +114,13 @@ struct ChatDataMsg : public IMessage
 		return total_size;
 	}
 
-	std::string text;  //^! hard-coded to the same size as the buffer window will read in
+	std::string text;
 };
 
 
 struct RemoveUserMsg : public IMessage
 {
-	RemoveUserMsg (Message_Type type) : IMessage(type) {}
+	RemoveUserMsg () : IMessage(RemoveUser_Msg) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{

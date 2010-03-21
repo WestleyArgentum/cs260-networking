@@ -5,8 +5,16 @@
 
 #include "Message.hpp"
 
+/*
+I always offset by the size of two unsigneds, but in reality I may need to change
+the header. Maybe I should compose a simple header and use a size() member function.
+*/
+
 IMessage* ConstructMessage(char* buffer)
 {
+	// append a null to the buffer to the end
+	*(buffer + *reinterpret_cast<unsigned*>(buffer)) = 0;
+
 	// the second thing buffer is an int that is the enum type of the message.
 	// switch on it.
 	switch( *( reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) ) )
@@ -29,8 +37,8 @@ IMessage* ConstructMessage(char* buffer)
 	case Username_Msg:
 		{
 			// we need to read potentially 256 bytes for the username
-			UsernameMsg* message = new UsernameMsg (Username_Msg);
-			memcpy(message->myname, buffer + (2 * sizeof(unsigned)), *reinterpret_cast<unsigned*>(buffer) - (2 * sizeof(unsigned)));
+			UsernameMsg* message = new UsernameMsg ();
+			message->myname = buffer + (2 * sizeof(unsigned));
 			return message;
 			break;
 		}
@@ -38,9 +46,16 @@ IMessage* ConstructMessage(char* buffer)
 	case ChatData_Msg:
 		{
 			// we need to read potentially 256 bytes for the message
-			ChatDataMsg* message = new ChatDataMsg (ChatData_Msg);
-			message->text = buffer + (2 * sizeof(unsigned)), *reinterpret_cast<unsigned*>(buffer) - (2 * sizeof(unsigned));
-			//memcpy(message->text, buffer + (2 * sizeof(unsigned)), *reinterpret_cast<unsigned*>(buffer) - (2 * sizeof(unsigned)));
+			ChatDataMsg* message = new ChatDataMsg ();
+			message->text = buffer + (2 * sizeof(unsigned));  //, *reinterpret_cast<unsigned*>(buffer) - (2 * sizeof(unsigned));  <--- how the fuck did that compile?
+			return message;
+			break;
+		}
+
+	case RemoveUser_Msg:
+		{
+			RemoveUserMsg* message = new RemoveUserMsg ();
+			message->user = buffer + (2 * sizeof(unsigned));
 			return message;
 			break;
 		}
