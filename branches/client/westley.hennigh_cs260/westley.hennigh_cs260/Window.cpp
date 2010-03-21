@@ -189,6 +189,7 @@ void MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM), HINST
 	// send and recv multiple times to ensure that you get all of the text.  Don't assume that the text
 	// will be null-terminated in the buffer when you call recv just because it is when you called send()
 	SendMessage(edit, EM_SETLIMITTEXT, (WPARAM)200, 0);
+	SendMessage(output, EM_SETLIMITTEXT, (WPARAM)25, 0);
 
 
 

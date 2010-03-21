@@ -27,14 +27,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
 {
-	// debug
-	/*char bufffer[STD_BUFF_SIZE];
-	UsernameMsg messsage(UsernameMsg);
-	messsage.myname = "Wes";
-	messsage.WriteOut(bufffer);
-
-	ConstructMessage(bufffer);*/
-	// ------------
 	MakeSillyWindow(WndProc, hInstance, nCmdShow);
 
 	// make the client
@@ -45,6 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	MSG msg;
 	IMessage* message;
+	std::string the_conversation;  // only here because windows sucks at readboxes
 	while (teh_client.StillConnected())
 	{
 		// if we update the screen without sending a message then
@@ -69,13 +62,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			{
 			case ChatData_Msg:
 				{
-					// now send the buffer to the actual read-only textbox
-					char temp [STD_BUFF_SIZE];
-					SendMessage(output, WM_GETTEXT, STD_BUFF_SIZE-1, (LPARAM)temp);
-					std::string temp2(temp);
-					temp2.append(static_cast<ChatDataMsg*>(message)->text);
-					temp2.append("\r\n");
-					SendMessage(output, WM_SETTEXT, 0, (LPARAM)temp2.c_str());
+					// now update the conversation and send the text to the read-only textbox
+					the_conversation.append(static_cast<ChatDataMsg*>(message)->text);
+					the_conversation.append("\r\n");
+
+					SendMessage(output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
+
+					// scroll the bar to the bottom
+					unsigned linecount = SendMessage(output, EM_GETLINECOUNT, 0, 0);
+					SendMessage(output, EM_LINESCROLL, 0, linecount);
 					break;
 				}
 
