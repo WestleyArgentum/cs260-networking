@@ -61,12 +61,12 @@ struct IMessage
 
 struct UsernameMsg : public IMessage
 {
-	UsernameMsg (Message_Type type) : IMessage(type) { memset(myname, 0, 256); }
+	UsernameMsg (Message_Type type) : IMessage(type) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + strlen(myname);
+		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + myname.size();
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -75,12 +75,12 @@ struct UsernameMsg : public IMessage
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
 		// copy the string over
-		strcpy(buffer + (2*sizeof(unsigned)), myname);
+		strcpy(buffer + (2*sizeof(unsigned)), myname.c_str());
 
 		return total_size;
 	}
 
-	char myname [256];  //^! hard-coded to the same size as the buffer window will read in
+	std::string myname;
 };
 
 
@@ -111,12 +111,12 @@ struct ChatDataMsg : public IMessage
 
 struct RemoveUserMsg : public IMessage
 {
-	RemoveUserMsg (Message_Type type) : IMessage(type) { memset(user, 0, 256); }
+	RemoveUserMsg (Message_Type type) : IMessage(type) {}
 
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + strlen(user);
+		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + user.size();
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -125,12 +125,12 @@ struct RemoveUserMsg : public IMessage
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
 		// copy the string over
-		strcpy(buffer + (2*sizeof(unsigned)), user);
+		strcpy(buffer + (2*sizeof(unsigned)), user.c_str());
 
 		return total_size;
 	}
 
-	char user [256];  //^! hard-coded to the same size as the buffer window will read in
+	std::string user;
 };
 
 

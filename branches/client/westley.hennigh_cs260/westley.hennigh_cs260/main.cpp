@@ -27,6 +27,14 @@ int WINAPI WinMain(HINSTANCE hInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
 {
+	// debug
+	/*char bufffer[STD_BUFF_SIZE];
+	UsernameMsg messsage(UsernameMsg);
+	messsage.myname = "Wes";
+	messsage.WriteOut(bufffer);
+
+	ConstructMessage(bufffer);*/
+	// ------------
 	MakeSillyWindow(WndProc, hInstance, nCmdShow);
 
 	// make the client
@@ -73,13 +81,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 			case RemoveUser_Msg:
 				{
-					int pos = SendMessage(listbox, LB_FINDSTRING, -1, (LPARAM)(static_cast<RemoveUserMsg*>(message)->user));
+					int pos = SendMessage(listbox, LB_FINDSTRING, -1, (LPARAM)(static_cast<RemoveUserMsg*>(message)->user.c_str()));
 					SendMessage(listbox, LB_DELETESTRING, pos - 1, NULL);
 					break;
 				}
 
 			case Username_Msg:
-				SendMessage(listbox, LB_ADDSTRING, 0, (LPARAM)(static_cast<UsernameMsg*>(message)->myname));
+				SendMessage(listbox, LB_ADDSTRING, 0, (LPARAM)(static_cast<UsernameMsg*>(message)->myname.c_str()));
 				break;
 
 			case RequestForUsername_Msg:

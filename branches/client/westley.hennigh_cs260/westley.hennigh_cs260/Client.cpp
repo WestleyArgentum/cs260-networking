@@ -200,7 +200,7 @@ int Client::Connect(std::string username_)
   if(kitten->my_type == RequestForUsername_Msg)
   {
     UsernameMsg username_message(Username_Msg);
-    strcpy(username_message.myname, username.c_str());
+    username_message.myname = username;
 
     ret = username_message.WriteOut(buffer);
     ret = send(clientSocket, buffer, ret, 0);

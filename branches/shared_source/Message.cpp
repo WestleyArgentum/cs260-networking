@@ -8,7 +8,7 @@
 IMessage* ConstructMessage(char* buffer)
 {
 	// append a null to the buffer to the end
-	//*(buffer + *reinterpret_cast<unsigned*>(buffer)) = 0;
+	*(buffer + *reinterpret_cast<unsigned*>(buffer)) = 0;
 
 	// the second thing buffer is an int that is the enum type of the message.
 	// switch on it.
