@@ -9,7 +9,7 @@
 #include <string>
 #include <iostream>
 
-enum Message_Type
+enum Message_Type  // the different message types
 {
 	Invalid_Type,
 	RequestForUsername_Msg,
@@ -18,6 +18,12 @@ enum Message_Type
 	ChatData_Msg,
 	NUM_TYPES
 };
+
+/*
+We need to know the size of the header when we are parsing buffers etc.
+The size is not going to change post compile time, however, so it is just a constant.
+*/
+extern const unsigned HEADERSIZE;
 
 
 /*
@@ -50,19 +56,18 @@ struct IMessage
 {
 	IMessage (Message_Type type) : my_type(type) {}  // no default ctor, must give type
 
+	// Serialization for message -------------------
 	virtual unsigned WriteOut (char* buffer)
 	{
-		// calculate the total size of the message
-		int total_size = sizeof(unsigned) + sizeof(Message_Type);
-
 		// set up the size of the message
-		*reinterpret_cast<unsigned*>(buffer) = total_size;
+		*reinterpret_cast<unsigned*>(buffer) = HEADERSIZE;
 
 		// set up the type of the message
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
-		return total_size;
+		return HEADERSIZE;
 	}
+	// ----------------------------
 
 	Message_Type my_type;  // every message will have a type associated with it
 };
@@ -72,10 +77,11 @@ struct UsernameMsg : public IMessage
 {
 	UsernameMsg () : IMessage(Username_Msg) {}
 
+	// Serialization for message -------------------
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + myname.size();
+		unsigned total_size = HEADERSIZE + myname.size();
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -88,6 +94,7 @@ struct UsernameMsg : public IMessage
 
 		return total_size;
 	}
+	// ----------------------------
 
 	std::string myname;
 };
@@ -97,10 +104,11 @@ struct ChatDataMsg : public IMessage
 {
 	ChatDataMsg () : IMessage(ChatData_Msg) {}
 
+	// Serialization for message -------------------
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + text.size();
+		unsigned total_size = HEADERSIZE + text.size();
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -113,6 +121,7 @@ struct ChatDataMsg : public IMessage
 
 		return total_size;
 	}
+	// ----------------------------
 
 	std::string text;
 };
@@ -122,10 +131,11 @@ struct RemoveUserMsg : public IMessage
 {
 	RemoveUserMsg () : IMessage(RemoveUser_Msg) {}
 
+	// Serialization for message -------------------
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = sizeof(unsigned) + sizeof(Message_Type) + user.size();
+		unsigned total_size = HEADERSIZE + user.size();
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -138,6 +148,7 @@ struct RemoveUserMsg : public IMessage
 
 		return total_size;
 	}
+	// ----------------------------
 
 	std::string user;
 };
