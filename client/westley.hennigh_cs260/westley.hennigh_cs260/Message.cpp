@@ -5,6 +5,9 @@
 
 #include "Message.hpp"
 
+// instantiation of headersize
+const unsigned HEADERSIZE = sizeof(unsigned) + sizeof(Message_Type);
+
 /*
 I always offset by the size of two unsigneds, but in reality I may need to change
 the header. Maybe I should compose a simple header and use a size() member function.
@@ -38,7 +41,7 @@ IMessage* ConstructMessage(char* buffer)
 		{
 			// we need to read potentially 256 bytes for the username
 			UsernameMsg* message = new UsernameMsg ();
-			message->myname = buffer + (2 * sizeof(unsigned));
+			message->myname = buffer + HEADERSIZE;
 			return message;
 			break;
 		}
@@ -47,7 +50,7 @@ IMessage* ConstructMessage(char* buffer)
 		{
 			// we need to read potentially 256 bytes for the message
 			ChatDataMsg* message = new ChatDataMsg ();
-			message->text = buffer + (2 * sizeof(unsigned));  //, *reinterpret_cast<unsigned*>(buffer) - (2 * sizeof(unsigned));  <--- how the fuck did that compile?
+			message->text = buffer + HEADERSIZE;  //, *reinterpret_cast<unsigned*>(buffer) - (2 * sizeof(unsigned));  <--- how the fuck did that compile?
 			return message;
 			break;
 		}
@@ -55,7 +58,7 @@ IMessage* ConstructMessage(char* buffer)
 	case RemoveUser_Msg:
 		{
 			RemoveUserMsg* message = new RemoveUserMsg ();
-			message->user = buffer + (2 * sizeof(unsigned));
+			message->user = buffer + HEADERSIZE;
 			return message;
 			break;
 		}
