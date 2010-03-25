@@ -211,6 +211,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\his_udp-client.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\..\shared_source\his_window.cpp"
 				>
 				<FileConfiguration

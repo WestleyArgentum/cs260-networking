@@ -8,10 +8,12 @@
 // instantiation of headersize
 const unsigned HEADERSIZE = sizeof(unsigned) + sizeof(Message_Type);
 
-/*
-I always offset by the size of two unsigneds, but in reality I may need to change
-the header. Maybe I should compose a simple header and use a size() member function.
-*/
+// length function
+unsigned length (std::string& str)
+{
+	return str.size() + 1;
+}
+
 
 IMessage* ConstructMessage(char* buffer)
 {
@@ -60,6 +62,16 @@ IMessage* ConstructMessage(char* buffer)
 			RemoveUserMsg* message = new RemoveUserMsg ();
 			message->user = buffer + HEADERSIZE;
 			return message;
+			break;
+		}
+
+	case RequestFileTransfer_Msg:
+		{
+			RequestFileTransferMsg* message = new RequestFileTransferMsg;
+			message->propagator = buffer + HEADERSIZE;
+			message->recipient = buffer + HEADERSIZE + length(message->propagator);
+			message->port = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient)) );
+			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + sizeof(unsigned)) );
 			break;
 		}
 

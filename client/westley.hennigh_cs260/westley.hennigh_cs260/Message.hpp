@@ -16,6 +16,7 @@ enum Message_Type  // the different message types
 	Username_Msg,
 	RemoveUser_Msg,
 	ChatData_Msg,
+	RequestFileTransfer_Msg,
 	NUM_TYPES
 };
 
@@ -24,6 +25,12 @@ We need to know the size of the header when we are parsing buffers etc.
 The size is not going to change post compile time, however, so it is just a constant.
 */
 extern const unsigned HEADERSIZE;
+
+/*
+I have grown tired of adding one to the length passed back by string.size.
+length(std::string& str) returns the actual length of the string as it will be in memory.
+*/
+unsigned length (std::string& str);
 
 
 /*
@@ -81,7 +88,7 @@ struct UsernameMsg : public IMessage
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = HEADERSIZE + myname.size();
+		unsigned total_size = HEADERSIZE + length(myname);
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -90,7 +97,7 @@ struct UsernameMsg : public IMessage
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
 		// copy the string over
-		strcpy(buffer + (2*sizeof(unsigned)), myname.c_str());
+		strcpy(buffer + (HEADERSIZE), myname.c_str());
 
 		return total_size;
 	}
@@ -108,7 +115,7 @@ struct ChatDataMsg : public IMessage
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = HEADERSIZE + text.size();
+		unsigned total_size = HEADERSIZE + length(text);
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -117,7 +124,7 @@ struct ChatDataMsg : public IMessage
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
 		// copy the string over
-		strcpy(buffer + (2*sizeof(unsigned)), text.c_str());
+		strcpy(buffer + (HEADERSIZE), text.c_str());
 
 		return total_size;
 	}
@@ -135,7 +142,7 @@ struct RemoveUserMsg : public IMessage
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = HEADERSIZE + user.size();
+		unsigned total_size = HEADERSIZE + length(user);
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -144,13 +151,46 @@ struct RemoveUserMsg : public IMessage
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
 		// copy the string over
-		strcpy(buffer + (2*sizeof(unsigned)), user.c_str());
+		strcpy(buffer + (HEADERSIZE), user.c_str());
 
 		return total_size;
 	}
 	// ----------------------------
 
 	std::string user;
+};
+
+
+struct RequestFileTransferMsg : public IMessage
+{
+	RequestFileTransferMsg () : IMessage(RequestFileTransfer_Msg) {}
+
+	// Serialization for message -------------------
+	virtual unsigned WriteOut (char* buffer)
+	{
+		// calculate the total size of the message
+		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient) + (2 * sizeof(unsigned));
+
+		// set up the size of the message
+		*reinterpret_cast<unsigned*>(buffer) = total_size;
+
+		// set up the type of the message
+		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
+
+		// copy the string over
+		strcpy(buffer + (HEADERSIZE), propagator.c_str());
+		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + sizeof(unsigned)) = file_size;
+
+		return total_size;
+	}
+	// ----------------------------
+
+	std::string propagator;
+	std::string recipient;
+	unsigned port;
+	unsigned file_size;
 };
 
 
