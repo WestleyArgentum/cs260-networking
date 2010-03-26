@@ -297,6 +297,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Threading"
+			>
+			<File
+				RelativePath=".\ActiveObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ActiveObject.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Mutex.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Thread.hpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
