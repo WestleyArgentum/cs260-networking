@@ -252,14 +252,14 @@
 				RelativePath=".\Client.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\Client.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Framework"
 			>
+			<File
+				RelativePath=".\Client.hpp"
+				>
+			</File>
 			<File
 				RelativePath=".\Defines.hpp"
 				>
@@ -306,6 +306,14 @@
 			</File>
 			<File
 				RelativePath=".\splitter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\udp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\udp.h"
 				>
 			</File>
 		</Filter>
