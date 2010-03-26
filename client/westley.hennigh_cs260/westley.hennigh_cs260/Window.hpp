@@ -12,15 +12,27 @@
 #define ID_QUITBUTTON 100
 #define ID_OKBUTTON 101
 
-extern HWND edit;
-extern HWND output;
-extern HWND listbox;
-
 /*
 This is really a cop-out. I should make a window class that has all sorts of
 neat shiny tweak-able features and stuff. Screw that though. I will labor for as
 long as it takes on almost any code, just not windows bull.
 */
 
-void MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM), HINSTANCE hInstance, int nCmdShow);
+struct SillyWindow
+{
+public:
+	static SillyWindow* window;  // singleton
+	static SillyWindow* GetWindow ();
+
+	void MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM), HINSTANCE hInstance, int nCmdShow);
+
+	HWND edit;
+	HWND output;
+	HWND listbox;
+
+private:
+	SillyWindow ();
+	SillyWindow (const SillyWindow& rhs);
+
+};
 

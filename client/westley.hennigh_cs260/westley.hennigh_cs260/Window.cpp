@@ -41,7 +41,20 @@ const int listBoxPosX = 670;
 const int listBoxPosY = 10;
 
 
-void MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM), HINSTANCE hInstance, int nCmdShow)
+SillyWindow* SillyWindow::window = NULL;  // init static pointer
+
+SillyWindow::SillyWindow()
+{}
+
+SillyWindow* SillyWindow::GetWindow()
+{
+	if (!window)
+		window = new SillyWindow;
+	
+	return window;
+}
+
+void SillyWindow::MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM), HINSTANCE hInstance, int nCmdShow)
 {
 	//set up your main window class.  this class will hold all of your controls
 	//and will be used for the main window

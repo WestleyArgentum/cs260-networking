@@ -11,13 +11,7 @@
 #include "Client.hpp"
 #include "Defines.hpp"
 
-// handles to the controls -----
-HWND edit;
-HWND output;
 Client* zclient;
-HWND listbox;
-
-// --------------
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -27,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
 {
-	MakeSillyWindow(WndProc, hInstance, nCmdShow);
+	SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);
 
 	// make the client
 	Client teh_client("UserInfo.txt");  // give it temp var's so we can hack in the actual values
@@ -66,23 +60,23 @@ int WINAPI WinMain(HINSTANCE hInstance,
 					the_conversation.append(static_cast<ChatDataMsg*>(message)->text);
 					the_conversation.append("\r\n");
 
-					SendMessage(output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
+					SendMessage(SillyWindow::GetWindow()->output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
 
 					// scroll the bar to the bottom
-					unsigned linecount = SendMessage(output, EM_GETLINECOUNT, 0, 0);
-					SendMessage(output, EM_LINESCROLL, 0, linecount);
+					unsigned linecount = SendMessage(SillyWindow::GetWindow()->output, EM_GETLINECOUNT, 0, 0);
+					SendMessage(SillyWindow::GetWindow()->output, EM_LINESCROLL, 0, linecount);
 					break;
 				}
 
 			case RemoveUser_Msg:
 				{
-					int pos = SendMessage(listbox, LB_FINDSTRING, -1, (LPARAM)(static_cast<RemoveUserMsg*>(message)->user.c_str()));
-					SendMessage(listbox, LB_DELETESTRING, pos, NULL);
+					int pos = SendMessage(SillyWindow::GetWindow()->listbox, LB_FINDSTRING, -1, (LPARAM)(static_cast<RemoveUserMsg*>(message)->user.c_str()));
+					SendMessage(SillyWindow::GetWindow()->listbox, LB_DELETESTRING, pos, NULL);
 					break;
 				}
 
 			case Username_Msg:
-				SendMessage(listbox, LB_ADDSTRING, 0, (LPARAM)(static_cast<UsernameMsg*>(message)->myname.c_str()));
+				SendMessage(SillyWindow::GetWindow()->listbox, LB_ADDSTRING, 0, (LPARAM)(static_cast<UsernameMsg*>(message)->myname.c_str()));
 				break;
 
 			case RequestForUsername_Msg:
@@ -139,7 +133,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				// send a message to get the text
 				memset(buffer, 0, STD_BUFF_SIZE - 1);
-				charcount = (int)SendMessage(edit, WM_GETTEXT, STD_BUFF_SIZE - 1, (LPARAM)buffer);
+				charcount = (int)SendMessage(SillyWindow::GetWindow()->edit, WM_GETTEXT, STD_BUFF_SIZE - 1, (LPARAM)buffer);
 
 				ChatDataMsg new_message;
 				new_message.text = zclient->GetUsername();
