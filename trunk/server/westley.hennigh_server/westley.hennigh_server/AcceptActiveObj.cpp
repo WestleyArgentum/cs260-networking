@@ -58,7 +58,7 @@ void AcceptingThread::Run()
 			std::string name;
 
 			// first send ------------------
-			IMessage msg;
+			IMessage msg(RequestForUsername_Msg);
 			ret = msg.WriteOut(buffer);
 			ret = send(clientSocket, buffer, ret, 0);
 			// -----------------------

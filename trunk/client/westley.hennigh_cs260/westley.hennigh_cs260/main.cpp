@@ -11,8 +11,6 @@
 #include "Defines.hpp"
 #include "udp.h"
 
-Client* zclient;
-
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 // main -----------------------------------------------------------------------
@@ -23,15 +21,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 {
 
   UDP udp("Test.txt");  udp.write();SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);	// make the client
-	Client teh_client("UserInfo.txt");  // give it temp var's so we can hack in the actual values
-  zclient = &teh_client;
-
-	teh_client.Connect();
+	Client::GetClient("UserInfo.txt");  // give it temp var's so we can hack in the actual values
+	Client::GetClient()->Connect();
 
 	MSG msg;
 	IMessage* message;
 	std::string the_conversation;  // only here because windows sucks at readboxes
-	while (teh_client.StillConnected())
+	while (Client::GetClient()->StillConnected())
 	{
 		// if we update the screen without sending a message then
 		// the screen won't be redrawn until a WM_PAINT message is sent.
@@ -47,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		}
 
 		// look for data coming in
-		message = teh_client.Receive();
+		message = Client::GetClient()->Receive();
 
 		if (message)
 		{
@@ -87,7 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		}
 	}
 
-	teh_client.ShutDown();
+	Client::GetClient()->ShutDown();
 
 	return 0;
 }
@@ -123,7 +119,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				// quit button was pressed
 			case ID_QUITBUTTON:
 				PostQuitMessage(0);
-				zclient->ShutDown();
+				Client::GetClient()->ShutDown();
 
 				break;
 
@@ -135,11 +131,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				charcount = (int)SendMessage(SillyWindow::GetWindow()->edit, WM_GETTEXT, STD_BUFF_SIZE - 1, (LPARAM)buffer);
 
 				ChatDataMsg new_message;
-				new_message.text = zclient->GetUsername();
+				new_message.text = Client::GetClient()->GetUsername();
 				new_message.text.append(": ");
 				new_message.text.append(buffer, charcount);
 
-				zclient->Send(new_message);
+				Client::GetClient()->Send(new_message);
 
 				//// is there text?
 				//if(charcount > 0){
@@ -178,7 +174,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_DESTROY:
 		PostQuitMessage(0);
-		zclient->ShutDown();
+		Client::GetClient()->ShutDown();
 		break;
 
 	default:

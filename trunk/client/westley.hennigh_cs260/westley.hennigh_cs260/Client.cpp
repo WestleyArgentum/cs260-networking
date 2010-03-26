@@ -20,6 +20,7 @@
 #include "Defines.hpp"
 #include "Window.hpp"
 
+Client* Client::client = NULL;
 
 Client::Client( std::string server_ip, unsigned port /*void (*callback_)(IMessage)*/ ) : ipAddress(server_ip), remote_port(port), lost_server(false)
 {}
@@ -55,6 +56,21 @@ Client::Client(std::string text_file) : lost_server(false)
 		//else
 			//^! bad value, print error
 	}
+}
+
+Client* Client::GetClient( std::string text_file )
+{
+	if (!client)
+		client = new Client(text_file);
+
+	return client;
+}
+
+Client* Client::GetClient()
+{
+	return client;
+
+	// well I could create one with bogus values but I should figure out a better solution
 }
 
 
@@ -313,6 +329,7 @@ std::string Client::GetUsername()
 {
 	return username;
 }
+
 //int Client::Run()
 //{
 //	int ret = 0;
