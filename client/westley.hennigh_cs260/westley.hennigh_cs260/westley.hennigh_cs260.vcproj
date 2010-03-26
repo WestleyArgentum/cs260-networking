@@ -298,22 +298,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Threading"
+			Name="Splitter"
 			>
 			<File
-				RelativePath=".\ActiveObject.cpp"
+				RelativePath=".\splitter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ActiveObject.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Mutex.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Thread.hpp"
+				RelativePath=".\splitter.h"
 				>
 			</File>
 		</Filter>
