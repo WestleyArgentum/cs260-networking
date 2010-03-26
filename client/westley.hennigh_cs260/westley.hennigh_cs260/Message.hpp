@@ -19,6 +19,7 @@ enum Message_Type  // the different message types
 	RequestFileTransfer_Msg,
 	AcceptFileTransfer_Msg,
 	RejectFileTransfer_Msg,
+	//^! InvalidUsername_Msg,
 	NUM_TYPES
 };
 
@@ -181,9 +182,10 @@ struct RequestFileTransferMsg : public IMessage
 
 		// copy the string over
 		strcpy(buffer + (HEADERSIZE), propagator.c_str());
-		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient)) = port;
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + sizeof(unsigned)) = file_size;
+		strcpy(buffer + (HEADERSIZE + length(propagator)), recipient.c_str());
+		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient)), ip_address.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + sizeof(unsigned)) = file_size;
 
 		return total_size;
 	}
@@ -191,6 +193,7 @@ struct RequestFileTransferMsg : public IMessage
 
 	std::string propagator;
 	std::string recipient;
+	std::string ip_address;
 	unsigned port;
 	unsigned file_size;
 
@@ -224,8 +227,9 @@ struct AcceptFileTransferMsg : public IMessage
 		// copy the string over
 		strcpy(buffer + (HEADERSIZE), propagator.c_str());
 		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient)) = port;
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + sizeof(unsigned)) = file_size;
+		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient)), ip_address.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + sizeof(unsigned)) = file_size;
 
 		return total_size;
 	}
@@ -233,6 +237,7 @@ struct AcceptFileTransferMsg : public IMessage
 
 	std::string propagator;
 	std::string recipient;
+	std::string ip_address;
 	unsigned port;
 	unsigned file_size;
 };

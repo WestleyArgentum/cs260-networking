@@ -13,25 +13,35 @@
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-// main -----------------------------------------------------------------------
+/*
+On this assignment the client will be a little module that maintains a TCP connection to a server.
+The client will make available send / recv functionality that a main loop in main will use (really I should
+figure out a better model and run the chat stuff on it's own thread, but were out of time).
+
+Whenever a file transfer is requested we will spawn a file transfer thread that will take care of the details.
+Before we exit main we will display a message that we are waiting for file transfer to finish and then wait for
+the threads to exit.
+
+I feel that spawning a new thread for each file transfer is a terrible solution, instead we should have jobs and
+a file transfer thread that handles all of them... for now, though, we may not have time.
+*/
 int WINAPI WinMain(HINSTANCE hInstance,
 									 HINSTANCE hPrevInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
-{
-
-  UDP udp("Test.txt");  udp.write();SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);	// make the client
-	Client::GetClient("UserInfo.txt");  // give it temp var's so we can hack in the actual values
+{	
+	SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);
+	Client::GetClient("UserInfo.txt");  // <--- I feel like there is a better way to do singletons that I should find and learn
 	Client::GetClient()->Connect();
 
 	MSG msg;
 	IMessage* message;
-	std::string the_conversation;  // only here because windows sucks at readboxes
+	std::string the_conversation;  // only here because windows sucks at read boxes
 	while (Client::GetClient()->StillConnected())
 	{
 		// if we update the screen without sending a message then
 		// the screen won't be redrawn until a WM_PAINT message is sent.
-		// there are ways around this that we'll talk about in class
+		// there are ways around this that we'll talk about in class  <--- ya, that happened...
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if(msg.message == WM_QUIT){
