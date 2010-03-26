@@ -9,9 +9,11 @@ void UDP::write(void)
 
   FILE* in = fopen(file, "rb");
   FILE* out = fopen(pub, "wb" );
-  fseek (in, 0, SEEK_END);
+  fseek(in, 0, SEEK_END);
 
   char* buffer = new char[ftell(in)];
+  
+  fseek(in, 0, SEEK_SET);
 
   if(in == NULL || out == NULL)
   {
@@ -37,6 +39,8 @@ void UDP::read(void)
   fseek(in, 0, SEEK_END);
 
   char* buffer = new char[ftell(in)];
+
+  fseek(in, 0, SEEK_SET);
 
   if(in == NULL || out == NULL)
   {

@@ -118,7 +118,7 @@ void AcceptingThread::Run()
 				Lock lock (mutex);
 
 				char msgbuff [BUFF_SIZE];
-				UsernameMsg name_msg(Username_Msg);
+				UsernameMsg name_msg;
 
 				for (unsigned i = 0; i < clients.size(); ++i)
 				{
