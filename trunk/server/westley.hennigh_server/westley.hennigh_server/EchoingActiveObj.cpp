@@ -57,7 +57,7 @@ void EchoingThread::Run()
 				else if(ret == 0)  // means they are done playing around
 				{
 					// remove them from the list and post a message to everyone that they are gone
-					RemoveUserMsg msg (RemoveUser_Msg);
+					RemoveUserMsg msg;
 					msg.user = clients[i].first;
 
 					char tempkitty [BUFF_SIZE];
