@@ -17,6 +17,8 @@ enum Message_Type  // the different message types
 	RemoveUser_Msg,
 	ChatData_Msg,
 	RequestFileTransfer_Msg,
+	AcceptFileTransfer_Msg,
+	RejectFileTransfer_Msg,
 	NUM_TYPES
 };
 
@@ -191,6 +193,76 @@ struct RequestFileTransferMsg : public IMessage
 	std::string recipient;
 	unsigned port;
 	unsigned file_size;
+
+	/*
+	I need to find a way to wrap up all the file transfer messages in one... or something.
+	Also, there needs to be a way to give file transfers a unique id across all the chat going on.
+	Maybe something given by the server.
+	The reasoning behind this is simply that if two clients were to send two file requests to each other in rapid
+	succession then when they got a response it would not always be easy to determine to which request (without
+	bloating the request with data that it shouldn't need).
+	Generally I think I'll do it this way for the assignment but then find some alternative for my personal use.
+	*/
+};
+
+struct AcceptFileTransferMsg : public IMessage
+{
+	AcceptFileTransferMsg () : IMessage(AcceptFileTransfer_Msg) {}
+
+	// Serialization for message -------------------
+	virtual unsigned WriteOut (char* buffer)
+	{
+		// calculate the total size of the message
+		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient) + (2 * sizeof(unsigned));
+
+		// set up the size of the message
+		*reinterpret_cast<unsigned*>(buffer) = total_size;
+
+		// set up the type of the message
+		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
+
+		// copy the string over
+		strcpy(buffer + (HEADERSIZE), propagator.c_str());
+		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + sizeof(unsigned)) = file_size;
+
+		return total_size;
+	}
+	// ----------------------------
+
+	std::string propagator;
+	std::string recipient;
+	unsigned port;
+	unsigned file_size;
+};
+
+struct RejectFileTransferMsg : public IMessage
+{
+	RejectFileTransferMsg () : IMessage(RejectFileTransfer_Msg) {}
+
+	// Serialization for message -------------------
+	virtual unsigned WriteOut (char* buffer)
+	{
+		// calculate the total size of the message
+		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient);
+
+		// set up the size of the message
+		*reinterpret_cast<unsigned*>(buffer) = total_size;
+
+		// set up the type of the message
+		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
+
+		// copy the string over
+		strcpy(buffer + (HEADERSIZE), propagator.c_str());
+		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
+
+		return total_size;
+	}
+	// ----------------------------
+
+	std::string propagator;
+	std::string recipient;
 };
 
 
