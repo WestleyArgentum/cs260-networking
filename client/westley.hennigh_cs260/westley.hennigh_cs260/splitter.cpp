@@ -88,8 +88,10 @@ int Data::SplitFile(size_t size_)
 \return int - Based on how the function ran, note 0 means it ran successfully.
 */
 /******************************************************************************/
-int Data::JoinFiles(void)
+int Data::JoinFiles(char* filename_)
 {
+  filename = filename_;
+
   // Create a pointer to the parent file and opens it.
   FILE *fp_parent = fopen(filename, "wb");
 
