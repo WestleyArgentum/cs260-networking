@@ -12,7 +12,7 @@ class Data
     Data(char*  filename_): filename(filename_){};
     Data(std::vector<char*> chunks_, size_t size_): chunks(chunks_), size(size_){};
     int SplitFile(size_t size_);
-    int JoinFiles(void);
+    int JoinFiles(char* filename_);
   private:
     char*  filename;
     std::vector<char*> chunks;
