@@ -5,11 +5,11 @@
 
 #include <string>
 #include <sstream>
-
 #include "Window.hpp"
 #include "Message.hpp"
 #include "Client.hpp"
 #include "Defines.hpp"
+#include "udp.h"
 
 Client* zclient;
 
@@ -21,9 +21,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
 {
-	SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);
 
-	// make the client
+  UDP udp("Test.txt");  udp.write();SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);	// make the client
 	Client teh_client("UserInfo.txt");  // give it temp var's so we can hack in the actual values
   zclient = &teh_client;
 
