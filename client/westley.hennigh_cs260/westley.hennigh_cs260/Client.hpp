@@ -22,12 +22,17 @@ In reality, I'm out of time so your just going to call receive and if you get so
 */
 class Client
 {
-public:
+private:
 	// upon creation we need at least an ip, a port, and the callback function to reach you
 	Client ( std::string server_ip, unsigned port /*void (*callback_)(IMessage)*/ );
 
 	// we can also get the values from a text file
 	Client (std::string text_file);
+
+public:
+	static Client* client;  // singleton
+	static Client* GetClient (std::string text_file);
+	static Client* GetClient ();
 
 	int Connect (std::string username_ = std::string());  // call to initiate a connection
 	int ShutDown ();  // user MUST call to cleanup the connection (maybe this should just be called in the destructor)
