@@ -72,6 +72,16 @@ IMessage* ConstructMessage(char* buffer)
 			message->recipient = buffer + HEADERSIZE + length(message->propagator);
 			message->port = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient)) );
 			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + sizeof(unsigned)) );
+			return message;
+			break;
+		}
+
+	case RejectFileTransfer_Msg:
+		{
+			RejectFileTransferMsg* message = new RejectFileTransferMsg;
+			message->propagator = buffer + HEADERSIZE;
+			message->recipient = buffer + HEADERSIZE + length(message->propagator);
+			return message;
 			break;
 		}
 
