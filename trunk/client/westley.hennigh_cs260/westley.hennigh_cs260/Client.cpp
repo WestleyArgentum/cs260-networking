@@ -18,8 +18,7 @@
 
 #include "Client.hpp"
 #include "Defines.hpp"
-
-extern HWND output;
+#include "Window.hpp"
 
 
 Client::Client( std::string server_ip, unsigned port /*void (*callback_)(IMessage)*/ ) : ipAddress(server_ip), remote_port(port), lost_server(false)
@@ -293,7 +292,7 @@ IMessage* Client::Receive()
 		lost_server = true;
 
 		//^! this should be de-coupled
-		SendMessage(output, WM_SETTEXT, 0, (LPARAM)"We are currently maintaining the server. Go away.");
+		SendMessage(SillyWindow::GetWindow()->output, WM_SETTEXT, 0, (LPARAM)"We are currently maintaining the server. Go away.");
 	}
 
 	// make the message (this is a good spot to check for errors)
