@@ -164,6 +164,12 @@ struct RemoveUserMsg : public IMessage
 };
 
 
+/*
+We are going to need to send a range of ports that we can transfer on with a request and the client responding will have
+to pick one that works for her and send it with the response (or send a deny if they cant send on those).
+
+Otherwise all hell could break loose.
+*/
 struct RequestFileTransferMsg : public IMessage
 {
 	RequestFileTransferMsg () : IMessage(RequestFileTransfer_Msg) {}
@@ -274,8 +280,10 @@ struct RejectFileTransferMsg : public IMessage
 /*
 ConstructMessage
 
-Make sure to modify me. I have not quite found a disconnect that would let me just put a
-virtual method in IMessage that could always construct the right thing. I'm working on it.
+Make sure to modify me.
+
+//^! I need to remove this by adding in a base class for message creators and then a templated class
+		 that will serve as a creator for any type of message. That is a far superior method of serialization.
 */
 IMessage* ConstructMessage(char* buffer);
 

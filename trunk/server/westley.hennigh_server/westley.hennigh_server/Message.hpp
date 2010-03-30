@@ -19,6 +19,7 @@ enum Message_Type  // the different message types
 	RequestFileTransfer_Msg,
 	AcceptFileTransfer_Msg,
 	RejectFileTransfer_Msg,
+	//^! InvalidUsername_Msg,
 	NUM_TYPES
 };
 
@@ -163,6 +164,12 @@ struct RemoveUserMsg : public IMessage
 };
 
 
+/*
+We are going to need to send a range of ports that we can transfer on with a request and the client responding will have
+to pick one that works for her and send it with the response (or send a deny if they cant send on those).
+
+Otherwise all hell could break loose.
+*/
 struct RequestFileTransferMsg : public IMessage
 {
 	RequestFileTransferMsg () : IMessage(RequestFileTransfer_Msg) {}
@@ -181,9 +188,10 @@ struct RequestFileTransferMsg : public IMessage
 
 		// copy the string over
 		strcpy(buffer + (HEADERSIZE), propagator.c_str());
-		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient)) = port;
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + sizeof(unsigned)) = file_size;
+		strcpy(buffer + (HEADERSIZE + length(propagator)), recipient.c_str());
+		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient)), ip_address.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + sizeof(unsigned)) = file_size;
 
 		return total_size;
 	}
@@ -191,6 +199,7 @@ struct RequestFileTransferMsg : public IMessage
 
 	std::string propagator;
 	std::string recipient;
+	std::string ip_address;
 	unsigned port;
 	unsigned file_size;
 
@@ -224,8 +233,9 @@ struct AcceptFileTransferMsg : public IMessage
 		// copy the string over
 		strcpy(buffer + (HEADERSIZE), propagator.c_str());
 		strcpy(buffer + (HEADERSIZE + length(propagator)) , recipient.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient)) = port;
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + sizeof(unsigned)) = file_size;
+		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient)), ip_address.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + sizeof(unsigned)) = file_size;
 
 		return total_size;
 	}
@@ -233,6 +243,7 @@ struct AcceptFileTransferMsg : public IMessage
 
 	std::string propagator;
 	std::string recipient;
+	std::string ip_address;
 	unsigned port;
 	unsigned file_size;
 };
@@ -269,8 +280,10 @@ struct RejectFileTransferMsg : public IMessage
 /*
 ConstructMessage
 
-Make sure to modify me. I have not quite found a disconnect that would let me just put a
-virtual method in IMessage that could always construct the right thing. I'm working on it.
+Make sure to modify me.
+
+//^! I need to remove this by adding in a base class for message creators and then a templated class
+		 that will serve as a creator for any type of message. That is a far superior method of serialization.
 */
 IMessage* ConstructMessage(char* buffer);
 
