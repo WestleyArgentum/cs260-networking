@@ -5,11 +5,12 @@
 
 #include <string>
 #include <sstream>
-#include "Window.hpp"
+
 #include "Message.hpp"
 #include "Client.hpp"
 #include "Defines.hpp"
 #include "udp.h"
+#include "Window.hpp"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -103,9 +104,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
-	TCHAR buffer[STD_BUFF_SIZE] = {0};
+	char buffer[STD_BUFF_SIZE] = {0};
 	int charcount = 0;
 	int controlID = 0;
+
 	switch (message)
 	{	
 	case WM_PAINT:
@@ -117,6 +119,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		break;
 
+  case WM_CREATE:
+
+      HMENU hMenu, hSubMenu;
+
+      hMenu = CreateMenu();
+
+      hSubMenu = CreatePopupMenu();
+      AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File");
+      AppendMenu(hSubMenu, MF_STRING, ID_FILE_EXIT,"&Exit");
+      AppendMenu(hSubMenu, MF_STRING, ID_FILE_SENDFILE, "&SendFile...");
+
+      SetMenu(hWnd, hMenu);
+    break;
 		// a command message was sent to the window.  What to do?
 	case WM_COMMAND:
 
@@ -133,8 +148,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				break;
 
+      case ID_FILE_EXIT:
+          PostMessage(hWnd, WM_CLOSE, 0, 0);
+        break;
+
+      case ID_FILE_SENDFILE:
+        {
+        OPENFILENAME ofn;
+        char szFileName[MAX_PATH] = "";
+
+        ZeroMemory(&ofn, sizeof(ofn));
+
+        ofn.lStructSize = sizeof(ofn); // SEE NOTE BELOW
+        ofn.hwndOwner = hWnd;
+        ofn.lpstrFilter = "All Files (*.*)\0*.*\0";
+        ofn.lpstrFile = szFileName;
+        ofn.nMaxFile = MAX_PATH;
+        ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+        //ofn.lpstrDefExt = "txt";
+
+        if(GetOpenFileName(&ofn))
+        {
+            // Do something usefull with the filename stored in szFileName 
+        }
+
+        break;
+        }
+
 				// ok button was pressed
 			case ID_OKBUTTON:
+        {
 
 				// send a message to get the text
 				memset(buffer, 0, STD_BUFF_SIZE - 1);
@@ -166,6 +209,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					// now send the buffer to the actual read-only textbox
 					//SendMessage(output, WM_SETTEXT, 0, (LPARAM)tempbuffer);
 				break;
+        }
 			}
 		}
 		else
