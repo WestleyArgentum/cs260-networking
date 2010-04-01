@@ -57,7 +57,9 @@ void FileTransferThread::Run()
 {
 	// set up a data object to get chunks of data
 
-	
+	// connect the udp socket
+
+	// transfer the data until done
 }
 
 void FileTransferThread::FlushThread()
