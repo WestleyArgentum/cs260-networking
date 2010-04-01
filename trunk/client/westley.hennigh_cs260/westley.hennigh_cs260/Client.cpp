@@ -14,7 +14,7 @@
 //help the compiler figure out where winsock lives.  You could
 //also add this to the linker but this means no 
 //extra settings for the .csproj file
-#pragma comment(lib, "ws2_32.lib")
+//#pragma comment(lib, "ws2_32.lib")
 
 #include "Client.hpp"
 #include "Defines.hpp"
