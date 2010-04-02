@@ -11,6 +11,7 @@
 #include "Defines.hpp"
 #include "udp.h"
 #include "Window.hpp"
+#include "Socket.hpp"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -30,10 +31,34 @@ int WINAPI WinMain(HINSTANCE hInstance,
 									 HINSTANCE hPrevInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
-{	
+{
+
+
+
+
+
 	SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);
 	Client::GetClient("UserInfo.txt");  // <--- I feel like there is a better way to do singletons that I should find and learn
 	Client::GetClient()->Connect();
+
+	// Debug ----------
+
+	/*ReliableUdpSocet sock;
+	sock.Connect("192.168.1.143", 8009);
+
+	UsernameMsg mess;
+	mess.myname = "Kitty!";
+
+	sock.Send(&mess);
+
+	while(true)
+	{
+		IMessage* meep = sock.Recv();
+		if(meep)
+			return 0;
+	}*/
+
+	// -------------
 
 	MSG msg;
 	IMessage* message;

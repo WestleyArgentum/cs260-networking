@@ -53,9 +53,14 @@ IMessage* ReliableUdpSocet::Recv( )
 
 	int count = recvfrom(socket, buffer, STD_BUFF_SIZE, 0, (SOCKADDR*)&remoteAddress, &remoteAddresslength);
 	if(count == SOCKET_ERROR)
-		return NULL;  //^! something went wrong
+	{
+		if(WSAGetLastError() != WSAEWOULDBLOCK)
+			return NULL;  //^! something went wrong
+	}
+	else if (count)
+		return ConstructMessage(buffer);
 
-	return ConstructMessage(buffer);
+	return NULL;
 }
 
 int ReliableUdpSocet::Connect( std::string remote_ip_, unsigned remote_port_ )
@@ -68,7 +73,7 @@ int ReliableUdpSocet::Connect( std::string remote_ip_, unsigned remote_port_ )
 
 	struct sockaddr_in socketAddress;
 	socketAddress.sin_family = AF_INET;
-	socketAddress.sin_port = 0;
+	socketAddress.sin_port = htons(8008);
 
 	hostent* localhost;
 	localhost = gethostbyname("");
@@ -98,6 +103,10 @@ int ReliableUdpSocet::Connect( std::string remote_ip_, unsigned remote_port_ )
 		ret = WSAGetLastError();
 		return ret;
 	}
+
+	// now put the socket into non-blocking mode
+	u_long val = 1;
+	ioctlsocket(socket, FIONBIO, &val);
 
 	// everything is a-ok *wink*
 	return 0;
