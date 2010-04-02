@@ -1,7 +1,4 @@
 #include "Jobs.h"
-
-//sendJob::sendJob(char* filename):data(filename){};
-//sendJob::~sendJob();
 void sendJob::update(char* chunk)
 {
   sSock->Send(&IMessage(RequestFileTransfer_Msg));
@@ -9,10 +6,9 @@ void sendJob::update(char* chunk)
 void sendJob::SetSocket(SuperSocket* sSock_)
 {
   sSock = sSock_;
+  static_cast<ReliableUdpSocet*>(sSock))->Connect(loPort, IP, rePort);
 }
 
-//recJob::recJob(char* filename):data(filename){};
-//recJob::~recJob();
 void recJob::update(char* chunk)
 {
   IMessage* mess;
@@ -21,4 +17,5 @@ void recJob::update(char* chunk)
 void recJob::SetSocket(SuperSocket* sSock_)
 {
   sSock = sSock_;
+  static_cast<ReliableUdpSocet*>(sSock))->Connect(loPort, IP, rePort);
 }
