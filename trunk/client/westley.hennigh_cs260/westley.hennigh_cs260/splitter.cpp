@@ -8,13 +8,9 @@
 /******************************************************************************/
 /*
 \name SpliteFile
-
 \fn int SplitFile(size_t size)
-
 \brief Splits in inputed parent file into smaller child files.
-
 \param size - The size of the outputed files (in bytes).
-
 \return int - error or chuncks if successful.
 */
 /******************************************************************************/

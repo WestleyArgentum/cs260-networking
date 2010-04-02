@@ -353,6 +353,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Jobs"
+			>
+			<File
+				RelativePath=".\Jobs.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Jobs.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
