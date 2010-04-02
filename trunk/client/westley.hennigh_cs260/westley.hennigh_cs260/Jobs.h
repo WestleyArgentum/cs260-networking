@@ -15,25 +15,33 @@ class jobs
 class sendJob : public jobs
 {
   public:
-    sendJob(char* filename):data(filename), sSock(NULL){};
+    sendJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
+    :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_) {};
     virtual ~sendJob();
     virtual void update(char* chunk);
     virtual void SetSocket(SuperSocket* sSock_);
   private:
     Data data;
     SuperSocket* sSock;
+    unsigned loPort;
+    char* IP;
+    unsigned rePort;
 };
 
 class recJob : public jobs
 {
   public:
-    recJob(char* filename):data(filename), sSock(NULL){};
+    recJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
+    :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_) {};
     virtual ~recJob();
     virtual void update(char* chunk);
     virtual void SetSocket(SuperSocket* sSock_);
   private:
     Data data;
     SuperSocket* sSock;
+    unsigned loPort;
+    char* IP;
+    unsigned rePort;
 };
 
 #endif //Jobs
