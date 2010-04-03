@@ -27,6 +27,10 @@ public:
 
 	void AddJob (jobs* job);
 
+	// these are just hacks to get this working ----
+	//std::vector<
+	// -------
+
 private:
 	virtual void InitThread ();
 	virtual void Run ();
@@ -40,6 +44,7 @@ private:
 	std::vector<jobs*> activejobs;
 	Mutex jobs_mutex;
 	bool quitflag;  // if true, were shutting down
+
 };
 
 #endif

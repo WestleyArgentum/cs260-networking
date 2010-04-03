@@ -1,5 +1,5 @@
 #include "Jobs.h"
-void sendJob::update()
+bool sendJob::update()
 {
 	// construct a message from a chunk of data
 	FileDataMsg message;
@@ -8,6 +8,8 @@ void sendJob::update()
 
 	// send that message across
   sSock->Send(&message);
+
+	return false;
 }
 void sendJob::SetSocket(SuperSocket* sSock_)
 {
@@ -17,7 +19,7 @@ void sendJob::SetSocket(SuperSocket* sSock_)
   static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
 
-void recJob::update()
+bool recJob::update()
 {
   IMessage* mess;
   mess = sSock->Recv();
@@ -25,11 +27,13 @@ void recJob::update()
 	if(mess)
 	{
 		if (mess->my_type != FileData_Msg)
-			return;  // something has gone wrong
+			return false;  // something has gone wrong
 
 		data.SetChunk(static_cast<FileDataMsg*>(mess)->data, static_cast<FileDataMsg*>(mess)->chunknum);
 		delete(mess);
 	}
+
+	return false;
 }
 void recJob::SetSocket(SuperSocket* sSock_)
 {
