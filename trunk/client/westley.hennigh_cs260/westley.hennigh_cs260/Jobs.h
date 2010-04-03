@@ -16,7 +16,7 @@ class sendJob : public jobs
 {
   public:
     sendJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
-    :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_) {};
+    :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currchunk(0) {};
     virtual ~sendJob();
     virtual void update();
     virtual void SetSocket(SuperSocket* sSock_);
