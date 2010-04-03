@@ -1,4 +1,9 @@
 #include "Jobs.h"
+sendJob::sendJob(char* filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize)
+:data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currChunk(0) 
+{
+  data.ResizeChunk(filesize);
+}
 bool sendJob::update()
 {
 	// construct a message from a chunk of data
@@ -18,7 +23,11 @@ void sendJob::SetSocket(SuperSocket* sSock_)
 	// set up our session with the socket
   static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
-
+recJob::recJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_, unsigned filesize)
+:data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
+{
+  data.ResizeChunk(filesize);
+}
 bool recJob::update()
 {
   IMessage* mess;
