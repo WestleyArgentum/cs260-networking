@@ -105,6 +105,22 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				SendMessage(SillyWindow::GetWindow()->listbox, LB_ADDSTRING, 0, (LPARAM)(static_cast<UsernameMsg*>(message)->myname.c_str()));
 				break;
 
+			case RequestFileTransfer_Msg:
+				// in a request we should prompt the user with the information in the request and give them a yes / no option
+				break;
+
+			case AcceptFileTransfer_Msg:
+				// if they have accepted search for the file transfer in the vec and push it as a job onto the file transfer thread
+
+				// if no file transfer was found there is an error... dont prompt the user, just ignore the accept
+				break;
+
+			case RejectFileTransfer_Msg:
+				// if they reject we should find the file transfer in the vec and remove it.
+
+				// also prompt the user saying that it was rejected
+				break;
+
 			case RequestForUsername_Msg:
 			case Invalid_Type:
 			case NUM_TYPES:
