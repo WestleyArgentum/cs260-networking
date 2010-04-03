@@ -15,7 +15,7 @@ class Data
     int SplitFile(size_t size_);
     int JoinFiles(char* filename_);
     std::vector<char> GetChunk(unsigned chunk);
-    void SetChunk(std::vector<char> data, unsigned chunk);
+    void SetChunk(std::vector<char>& data, unsigned chunk);
   private:
     char*  filename;
     std::vector<std::vector<char>> chunks;
