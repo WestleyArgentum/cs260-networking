@@ -189,7 +189,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         if(GetOpenFileName(&ofn))
         {
-            // Do something usefull with the filename stored in szFileName 
+            // Do something useful with the filename stored in szFileName
         }
 
         break;
