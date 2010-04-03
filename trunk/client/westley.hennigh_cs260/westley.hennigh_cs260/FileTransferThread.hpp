@@ -13,25 +13,28 @@
 
 #include "ActiveObject.hpp"
 #include "Mutex.hpp"
+#include "Socket.hpp"
+#include "Jobs.h"
 
 class FileTransferThread : public ActiveObject
 {
 public:
-	FileTransferThread (std::string remote_ip_, unsigned remote_port_, std::string filename_);
+	FileTransferThread ();
 	virtual ~FileTransferThread ();
+
+	void AddJob (jobs* job);
 
 private:
 	virtual void InitThread ();
 	virtual void Run ();
 	virtual void FlushThread ();
 
-	std::string filename;
-	std::string remote_ip;
-	unsigned remote_port;
-
-	SOCKET socket;
+	ReliableUdpSocet socket;  // this will eventually be multiplexed. as of now if more than one job uses it it will break.
 	sockaddr_in remote_address;
 
+	std::vector<jobs*> activejobs;
+	Mutex jobs_mutex;
+	bool quitflag;  // if true, were shutting down
 };
 
 #endif

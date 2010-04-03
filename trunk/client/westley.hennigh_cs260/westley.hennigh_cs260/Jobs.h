@@ -9,7 +9,7 @@ class jobs
   public:
     virtual ~jobs() = 0;
     virtual void update() = 0;
-    virtual void SetSocket() = 0;
+    virtual void SetSocket(SuperSocket* sSock_) = 0;
 };
 
 class sendJob : public jobs
@@ -18,7 +18,7 @@ class sendJob : public jobs
     sendJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
     :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_) {};
     virtual ~sendJob();
-    virtual void update(char* chunk);
+    virtual void update();
     virtual void SetSocket(SuperSocket* sSock_);
   private:
     Data data;
@@ -34,7 +34,7 @@ class recJob : public jobs
     recJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
     :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_) {};
     virtual ~recJob();
-    virtual void update(char* chunk);
+    virtual void update();
     virtual void SetSocket(SuperSocket* sSock_);
   private:
     Data data;

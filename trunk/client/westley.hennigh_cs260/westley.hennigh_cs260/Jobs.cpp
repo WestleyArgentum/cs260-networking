@@ -1,21 +1,30 @@
 #include "Jobs.h"
-void sendJob::update(char* chunk)
+void sendJob::update()
 {
-  sSock->Send(&IMessage(RequestFileTransfer_Msg));
+	//^! construct a message from a chunk of data
+
+	// send that message across
+  //sSock->Send(&message);
 }
 void sendJob::SetSocket(SuperSocket* sSock_)
 {
   sSock = sSock_;
-  static_cast<ReliableUdpSocet*>(sSock))->Connect(loPort, IP, rePort);
+
+	// set up our session with the socket
+  static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
 
-void recJob::update(char* chunk)
+void recJob::update()
 {
   IMessage* mess;
   mess = sSock->Recv();
+
+	//^! pass the received data into the data object
 }
 void recJob::SetSocket(SuperSocket* sSock_)
 {
   sSock = sSock_;
-  static_cast<ReliableUdpSocet*>(sSock))->Connect(loPort, IP, rePort);
+
+	// set up our session with the socket
+  static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }

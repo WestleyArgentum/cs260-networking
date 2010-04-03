@@ -63,17 +63,18 @@ IMessage* ReliableUdpSocet::Recv( )
 	return NULL;
 }
 
-int ReliableUdpSocet::Connect( std::string remote_ip_, unsigned remote_port_ )
+int ReliableUdpSocet::Connect( unsigned local_port_, std::string remote_ip_, unsigned remote_port_ )
 {
 	int ret;
 
 	// save these just in case
 	remote_ip = remote_ip_;
 	remote_port = remote_port_;
+	local_port = local_port_;
 
 	struct sockaddr_in socketAddress;
 	socketAddress.sin_family = AF_INET;
-	socketAddress.sin_port = htons(8008);
+	socketAddress.sin_port = htons(local_port);
 
 	hostent* localhost;
 	localhost = gethostbyname("");
@@ -112,6 +113,10 @@ int ReliableUdpSocet::Connect( std::string remote_ip_, unsigned remote_port_ )
 	return 0;
 }
 
+unsigned ReliableUdpSocet::GetLocalPort()
+{
+	return local_port;
+}
 
 /*
 Returns 1 if they ack-ed, 0 if they did not, and -1 if there was an error.
