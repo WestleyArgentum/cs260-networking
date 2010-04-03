@@ -85,6 +85,22 @@ IMessage* ConstructMessage(char* buffer)
 			break;
 		}
 
+	case FileData_Msg:
+		{
+			FileDataMsg* message = new FileDataMsg;
+			message->data = buffer + HEADERSIZE;
+			return message;
+			break;
+		}
+
+	case FileDataAck_Msg:
+		{
+			FileDataAckMsg* message = new FileDataAckMsg;
+			message->ack = *reinterpret_cast<unsigned*>(buffer + HEADERSIZE);
+			return message;
+			break;
+		}
+
 	default:
 		{
 			return NULL;
