@@ -1,9 +1,9 @@
 #include "Jobs.h"
 void sendJob::update()
 {
-	//^! construct a message from a chunk of data
+	// construct a message from a chunk of data
 	FileDataMsg message;
-	//message.data = data.getchunk(currchunk++);
+	message.data = data.GetChunk(currChunk++);
 
 	// send that message across
   sSock->Send(&message);
@@ -20,8 +20,9 @@ void recJob::update()
 {
   IMessage* mess;
   mess = sSock->Recv();
-
-	//^! pass the received data into the data object
+  char* buffer = (char*) malloc(sizeof(char) * strlen(static_cast<FileDataMsg*>(mess)->data.c_str())-1);
+  buffer = const_cast<char*>(static_cast<FileDataMsg*>(mess)->data.c_str());
+  data.SetChunk(buffer, static_cast<FileDataMsg*>(mess)->chunknum);
 }
 void recJob::SetSocket(SuperSocket* sSock_)
 {

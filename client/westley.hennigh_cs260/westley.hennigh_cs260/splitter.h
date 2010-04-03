@@ -13,6 +13,8 @@ class Data
     Data(std::vector<char*> chunks_, size_t size_): chunks(chunks_), size(size_){};
     int SplitFile(size_t size_);
     int JoinFiles(char* filename_);
+    char* GetChunk(unsigned chunk);
+    void SetChunk(char* data, unsigned chunk);
   private:
     char*  filename;
     std::vector<char*> chunks;
