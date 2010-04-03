@@ -1,6 +1,8 @@
 #ifndef JOBS_H
 #define JOBS_H
 
+#include <string>
+
 #include "splitter.h"
 #include "Socket.hpp"
 
@@ -15,7 +17,7 @@ class jobs
 class sendJob : public jobs
 {
   public:
-    sendJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
+		sendJob(char* filename, unsigned loPort_, std::string IP_, unsigned rePort_)
     :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currchunk(0) {};
     virtual ~sendJob();
     virtual void update();
@@ -24,7 +26,7 @@ class sendJob : public jobs
     Data data;
     SuperSocket* sSock;
     unsigned loPort;
-    char* IP;
+		std::string IP;
     unsigned rePort;
 		unsigned currchunk;
 };
