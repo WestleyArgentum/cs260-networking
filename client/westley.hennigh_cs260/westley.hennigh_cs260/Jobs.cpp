@@ -23,6 +23,10 @@ void sendJob::SetSocket(SuperSocket* sSock_)
 	// set up our session with the socket
   static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
+
+sendJob::~sendJob()
+{}
+
 recJob::recJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_, unsigned filesize)
 :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
 {
@@ -51,3 +55,6 @@ void recJob::SetSocket(SuperSocket* sSock_)
 	// set up our session with the socket
   static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
+
+recJob::~recJob()
+{}
