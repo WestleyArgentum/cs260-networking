@@ -22,6 +22,9 @@ public:
 	FileTransferThread ();
 	virtual ~FileTransferThread ();
 
+	// singleton
+	static FileTransferThread* GetInstance ();
+
 	void AddJob (jobs* job);
 
 private:
@@ -29,8 +32,10 @@ private:
 	virtual void Run ();
 	virtual void FlushThread ();
 
+	static FileTransferThread* me;
+
 	ReliableUdpSocet socket;  // this will eventually be multiplexed. as of now if more than one job uses it it will break.
-	sockaddr_in remote_address;
+	//sockaddr_in remote_address;
 
 	std::vector<jobs*> activejobs;
 	Mutex jobs_mutex;

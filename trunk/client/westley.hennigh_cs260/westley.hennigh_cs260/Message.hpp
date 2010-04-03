@@ -8,6 +8,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 enum Message_Type  // the different message types
 {
@@ -289,7 +290,7 @@ struct FileDataMsg : public IMessage
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = HEADERSIZE + length(data);
+		unsigned total_size = HEADERSIZE + (2 * sizeof(unsigned)) + data.size();
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -297,15 +298,18 @@ struct FileDataMsg : public IMessage
 		// set up the type of the message
 		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
 
-		// copy the string over
-		strcpy(buffer + (HEADERSIZE), data.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(data)) = chunknum;
+		// copy the vector over, the first 4 bytes are the size
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE) = data.size();
+		memcpy(buffer + HEADERSIZE + sizeof(unsigned), &(data[0]), data.size());
+
+		// copy over the chunk number
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + sizeof(unsigned) + data.size()) = chunknum;
 
 		return total_size;
 	}
 	// ----------------------------
 
-	std::string data;
+	std::vector<char> data;
 	unsigned chunknum;
 	//unsigned TransferId;  // not yet set up (will be transer id issued by the server)
 };

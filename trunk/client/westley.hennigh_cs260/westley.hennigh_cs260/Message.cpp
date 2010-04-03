@@ -89,8 +89,16 @@ IMessage* ConstructMessage(char* buffer)
 	case FileData_Msg:
 		{
 			FileDataMsg* message = new FileDataMsg;
-			message->data = buffer + HEADERSIZE;
-			message->chunknum = *reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->data));
+			unsigned size = *reinterpret_cast<unsigned*>(buffer + HEADERSIZE);
+
+			// fill the vector
+			message->data.reserve(size);
+			for(unsigned i = 0; i < size; ++i)
+				message->data.push_back(*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + sizeof(unsigned) + i));
+
+			// get the chunk number
+			message->chunknum = *reinterpret_cast<unsigned*>(buffer + HEADERSIZE + sizeof(unsigned) + size);
+
 			return message;
 			break;
 		}
