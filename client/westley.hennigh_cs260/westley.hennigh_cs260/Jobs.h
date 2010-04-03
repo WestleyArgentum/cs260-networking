@@ -9,9 +9,13 @@
 class jobs
 {
   public:
+		jobs() : done(false) {}
     virtual ~jobs() = 0;
-    virtual void update() = 0;
+    virtual bool update() = 0;
     virtual void SetSocket(SuperSocket* sSock_) = 0;
+
+	private:
+		bool done;
 };
 
 class sendJob : public jobs
@@ -20,7 +24,7 @@ class sendJob : public jobs
 		sendJob(char* filename, unsigned loPort_, std::string IP_, unsigned rePort_)
     :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currChunk(0) {};
     virtual ~sendJob();
-    virtual void update();
+    virtual bool update();
     virtual void SetSocket(SuperSocket* sSock_);
   private:
     Data data;
@@ -37,7 +41,7 @@ class recJob : public jobs
     recJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_)
     :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_) {};
     virtual ~recJob();
-    virtual void update();
+    virtual bool update();
     virtual void SetSocket(SuperSocket* sSock_);
   private:
     Data data;

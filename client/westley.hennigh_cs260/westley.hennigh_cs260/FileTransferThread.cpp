@@ -33,7 +33,13 @@ void FileTransferThread::Run()
 		{
 			Lock lock(jobs_mutex);  // acquire
 			for (unsigned i = 0; i < activejobs.size(); ++i)
-				activejobs[i]->update();
+			{
+				if(activejobs[i]->update())
+				{
+					delete activejobs[i];
+					activejobs.erase(activejobs.begin() + i);
+				}
+			}
 		}
 
 		// do
