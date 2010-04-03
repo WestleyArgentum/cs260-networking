@@ -112,8 +112,11 @@ int Data::JoinFiles(char* filename_)
   // Until I have seen every inputed file go through them all and take there data.
   for(unsigned i = 0; i < chunks.size(); ++i)
   {
-    void * temp = &chunks[i];
+    char* temp = new char(chunks[i].size());
+    for(unsigned j = 0; j < chunks[i].size(); ++j)
+      temp[j] = chunks[i][j];
     fwrite(temp, sizeof(char), size, fp_parent);
+    delete [] temp;
   }
 
   /*! Close the parent file, free the buffer, and return home. */
