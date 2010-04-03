@@ -2,9 +2,11 @@
 void sendJob::update()
 {
 	//^! construct a message from a chunk of data
+	FileDataMsg message;
+	//message.data = data.getchunk(currchunk++);
 
 	// send that message across
-  //sSock->Send(&message);
+  sSock->Send(&message);
 }
 void sendJob::SetSocket(SuperSocket* sSock_)
 {

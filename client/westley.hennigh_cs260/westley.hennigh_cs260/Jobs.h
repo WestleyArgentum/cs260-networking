@@ -26,6 +26,7 @@ class sendJob : public jobs
     unsigned loPort;
     char* IP;
     unsigned rePort;
+		unsigned currchunk;
 };
 
 class recJob : public jobs
