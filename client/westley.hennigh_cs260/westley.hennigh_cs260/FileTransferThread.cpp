@@ -10,6 +10,8 @@
 #include "FileTransferThread.hpp"
 #include "Mutex.hpp"
 
+FileTransferThread* FileTransferThread::me = NULL;
+
 /*
 No longer in use, info on connection will come in with jobs (for now just the first one will be looked at).
 */
@@ -52,4 +54,12 @@ void FileTransferThread::AddJob( jobs* job )
 	// remote host and stuff
 
 	job->SetSocket(&socket);
+}
+
+FileTransferThread* FileTransferThread::GetInstance()
+{
+	if (!me)
+		me = new FileTransferThread;
+
+	return me;
 }
