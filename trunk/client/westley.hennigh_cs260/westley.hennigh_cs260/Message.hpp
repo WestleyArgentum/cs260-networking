@@ -192,8 +192,9 @@ struct RequestFileTransferMsg : public IMessage
 		strcpy(buffer + (HEADERSIZE), propagator.c_str());
 		strcpy(buffer + (HEADERSIZE + length(propagator)), recipient.c_str());
 		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient)), ip_address.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)) = port;
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + sizeof(unsigned)) = file_size;
+		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)), filename.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + length(filename)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + length(filename) + sizeof(unsigned)) = file_size;
 
 		return total_size;
 	}
@@ -202,6 +203,7 @@ struct RequestFileTransferMsg : public IMessage
 	std::string propagator;
 	std::string recipient;
 	std::string ip_address;
+	std::string filename;
 	unsigned port;
 	unsigned file_size;
 

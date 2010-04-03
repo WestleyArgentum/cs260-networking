@@ -19,6 +19,8 @@ enum Message_Type  // the different message types
 	RequestFileTransfer_Msg,
 	AcceptFileTransfer_Msg,
 	RejectFileTransfer_Msg,
+	FileData_Msg,
+	FileDataAck_Msg,
 	//^! InvalidUsername_Msg,
 	NUM_TYPES
 };
@@ -190,8 +192,9 @@ struct RequestFileTransferMsg : public IMessage
 		strcpy(buffer + (HEADERSIZE), propagator.c_str());
 		strcpy(buffer + (HEADERSIZE + length(propagator)), recipient.c_str());
 		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient)), ip_address.c_str());
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)) = port;
-		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + sizeof(unsigned)) = file_size;
+		strcpy(buffer + (HEADERSIZE + length(propagator) + length(recipient) + length(ip_address)), filename.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + length(filename)) = port;
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + length(filename) + sizeof(unsigned)) = file_size;
 
 		return total_size;
 	}
@@ -200,6 +203,7 @@ struct RequestFileTransferMsg : public IMessage
 	std::string propagator;
 	std::string recipient;
 	std::string ip_address;
+	std::string filename;
 	unsigned port;
 	unsigned file_size;
 
@@ -274,6 +278,63 @@ struct RejectFileTransferMsg : public IMessage
 
 	std::string propagator;
 	std::string recipient;
+};
+
+
+struct FileDataMsg : public IMessage
+{
+	FileDataMsg () : IMessage(FileData_Msg) {}
+
+	// Serialization for message -------------------
+	virtual unsigned WriteOut (char* buffer)
+	{
+		// calculate the total size of the message
+		unsigned total_size = HEADERSIZE + length(data);
+
+		// set up the size of the message
+		*reinterpret_cast<unsigned*>(buffer) = total_size;
+
+		// set up the type of the message
+		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
+
+		// copy the string over
+		strcpy(buffer + (HEADERSIZE), data.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(data)) = chunknum;
+
+		return total_size;
+	}
+	// ----------------------------
+
+	std::string data;
+	unsigned chunknum;
+	//unsigned TransferId;  // not yet set up (will be transer id issued by the server)
+};
+
+struct FileDataAckMsg : public IMessage
+{
+	FileDataAckMsg () : IMessage(FileDataAck_Msg) {}
+
+	// Serialization for message -------------------
+	virtual unsigned WriteOut (char* buffer)
+	{
+		// calculate the total size of the message
+		unsigned total_size = HEADERSIZE + sizeof(unsigned);
+
+		// set up the size of the message
+		*reinterpret_cast<unsigned*>(buffer) = total_size;
+
+		// set up the type of the message
+		*reinterpret_cast<unsigned*>(buffer + sizeof(unsigned)) = my_type;
+
+		// copy the ack over
+		*reinterpret_cast<unsigned*>(buffer + 2 * sizeof(unsigned)) = ack;
+
+		return total_size;
+	}
+	// ----------------------------
+
+	unsigned ack;
+	//unsigned TransferId;  // not yet set up (will be transer id issued by the server)
 };
 
 

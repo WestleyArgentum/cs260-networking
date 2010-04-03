@@ -70,8 +70,9 @@ IMessage* ConstructMessage(char* buffer)
 			RequestFileTransferMsg* message = new RequestFileTransferMsg;
 			message->propagator = buffer + HEADERSIZE;
 			message->recipient = buffer + HEADERSIZE + length(message->propagator);
-			message->port = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient)) );
-			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + sizeof(unsigned)) );
+			message->filename = buffer + HEADERSIZE + length(message->propagator) + length(message->recipient);
+			message->port = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->filename)) );
+			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->filename) + sizeof(unsigned)) );
 			return message;
 			break;
 		}
