@@ -10,7 +10,7 @@ class jobs
 {
   public:
 		jobs() : done(false) {}
-    virtual ~jobs() = 0;
+		virtual ~jobs() {};
     virtual bool update() = 0;
     virtual void SetSocket(SuperSocket* sSock_) = 0;
 
