@@ -297,12 +297,14 @@ struct FileDataMsg : public IMessage
 
 		// copy the string over
 		strcpy(buffer + (HEADERSIZE), data.c_str());
+		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(data)) = chunknum;
 
 		return total_size;
 	}
 	// ----------------------------
 
 	std::string data;
+	unsigned chunknum;
 	//unsigned TransferId;  // not yet set up (will be transer id issued by the server)
 };
 

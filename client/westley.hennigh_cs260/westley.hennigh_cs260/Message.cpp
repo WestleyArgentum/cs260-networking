@@ -89,6 +89,7 @@ IMessage* ConstructMessage(char* buffer)
 		{
 			FileDataMsg* message = new FileDataMsg;
 			message->data = buffer + HEADERSIZE;
+			message->chunknum = *reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->data));
 			return message;
 			break;
 		}
