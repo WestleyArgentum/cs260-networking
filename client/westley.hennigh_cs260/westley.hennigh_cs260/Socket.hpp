@@ -42,11 +42,14 @@ public:
 	virtual IMessage* Recv ();
 
 	// We will maintain a connection over UDP
-	int Connect (std::string remote_ip_, unsigned remote_port_);
+	int Connect (unsigned local_port_, std::string remote_ip_, unsigned remote_port_);
+
+	unsigned GetLocalPort ();
 
 private:
 	std::string remote_ip;
 	unsigned remote_port;
+	unsigned local_port;
 
 	sockaddr_in remoteAddress;
 	SOCKET socket;
