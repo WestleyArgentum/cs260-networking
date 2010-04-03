@@ -11,6 +11,7 @@ class Data
   public:
     Data(char*  filename_): filename(filename_){};
     Data(std::vector<char*> chunks_, size_t size_): chunks(chunks_), size(size_){};
+    ~Data();
     int SplitFile(size_t size_);
     int JoinFiles(char* filename_);
     char* GetChunk(unsigned chunk);

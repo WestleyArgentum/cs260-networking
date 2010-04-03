@@ -5,6 +5,17 @@
 // I Define the max buffer size equal to 4069 bytes.
 #define MAX_SIZE 4096
 
+Data::~Data()
+{
+  char* temp;
+  unsigned chunk_count = chunks.size();
+  while(chunk_count)
+  {
+    temp = chunks[chunk_count];
+    chunks.pop_back();
+  }
+  chunks.clear();
+}
 /******************************************************************************/
 /*
 \name SpliteFile
@@ -75,7 +86,6 @@ int Data::SplitFile(size_t size_)
   }
   // Close the parent file, free the buffer, and return home.
   fclose(fp_parent);
-  free(buffer);
   return 0;
 }
 
