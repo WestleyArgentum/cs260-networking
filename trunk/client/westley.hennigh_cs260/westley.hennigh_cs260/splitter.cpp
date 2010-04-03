@@ -127,9 +127,9 @@ std::vector<char> Data::GetChunk(unsigned chunk)
 {
   return chunks[chunk];
 }
-void Data::SetChunk(std::vector<char> data, unsigned chunk)
+void Data::SetChunk(std::vector<char>& data, unsigned chunk)
 {
   if(chunks.size() < chunk)
-    chunks.resize(chunk);
+    chunks.resize(chunk);  // <-- once we reach the initial size we will make a new copy of the whole file every time we get a new packet
   chunks[chunk] = data;
 }

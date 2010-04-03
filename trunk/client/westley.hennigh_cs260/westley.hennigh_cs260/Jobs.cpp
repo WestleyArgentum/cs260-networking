@@ -3,7 +3,8 @@ void sendJob::update()
 {
 	// construct a message from a chunk of data
 	FileDataMsg message;
-	message.data = data.GetChunk(currChunk++);
+	message.data = data.GetChunk(currChunk);
+	message.chunknum = currChunk++;
 
 	// send that message across
   sSock->Send(&message);
@@ -20,8 +21,15 @@ void recJob::update()
 {
   IMessage* mess;
   mess = sSock->Recv();
-  data.SetChunk(static_cast<FileDataMsg*>(mess)->data, static_cast<FileDataMsg*>(mess)->chunknum);
-  delete(mess);
+
+	if(mess)
+	{
+		if (mess->my_type != FileData_Msg)
+			return;  // something has gone wrong
+
+		data.SetChunk(static_cast<FileDataMsg*>(mess)->data, static_cast<FileDataMsg*>(mess)->chunknum);
+		delete(mess);
+	}
 }
 void recJob::SetSocket(SuperSocket* sSock_)
 {
