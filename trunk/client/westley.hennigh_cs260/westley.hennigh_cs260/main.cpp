@@ -163,8 +163,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
 						}
 					}
 
-					//^! also prompt the user saying that it was rejected
+					// also prompt the user saying that it was rejected
+					the_conversation.append("File Transfer Rejected. No love.");
+					the_conversation.append("\r\n");
 
+					SendMessage(SillyWindow::GetWindow()->output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
+
+					// scroll the bar to the bottom
+					unsigned linecount = SendMessage(SillyWindow::GetWindow()->output, EM_GETLINECOUNT, 0, 0);
+					SendMessage(SillyWindow::GetWindow()->output, EM_LINESCROLL, 0, linecount);
 					break;
 				}
 
