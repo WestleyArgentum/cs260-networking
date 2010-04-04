@@ -33,7 +33,7 @@ int Data::SplitFile(size_t size_)
   char current_file_name[256];
 
   // Create a pointer to the parent file and opens it.
-  FILE *fp_parent = fopen(filename, "rb");
+  FILE *fp_parent = fopen(filename.c_str(), "rb");
   // If the parent file wasnt open free your memory and return
   //    bad source file.
   if(!fp_parent)
@@ -97,12 +97,12 @@ int Data::SplitFile(size_t size_)
 \return int - Based on how the function ran, note 0 means it ran successfully.
 */
 /******************************************************************************/
-int Data::JoinFiles(char* filename_)
+int Data::JoinFiles(std::string filename_)
 {
   filename = filename_;
 
   // Create a pointer to the parent file and opens it.
-  FILE *fp_parent = fopen(filename, "wb");
+  FILE *fp_parent = fopen(filename.c_str(), "wb");
 
   // If the parent file wasnt open free your memory and return
   //   bad source file.

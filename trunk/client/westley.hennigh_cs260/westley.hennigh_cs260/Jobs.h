@@ -40,7 +40,7 @@ class sendJob : public jobs
 class recJob : public jobs
 {
   public:
-    recJob(std::string filename, unsigned loPort_, char* IP_, unsigned rePort_, unsigned filesize);
+    recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize);
     virtual ~recJob();
     virtual bool update();
     virtual void SetSocket(SuperSocket* sSock_);
@@ -48,7 +48,7 @@ class recJob : public jobs
     Data data;
     SuperSocket* sSock;
     unsigned loPort;
-    char* IP;
+    std::string IP;
     unsigned rePort;
 };
 

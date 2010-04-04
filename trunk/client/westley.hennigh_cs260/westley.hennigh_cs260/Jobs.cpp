@@ -1,7 +1,7 @@
 #include "Jobs.h"
 
 sendJob::sendJob(std::string filename, unsigned filesize, unsigned loPort_, std::string remoteuser, std::string IP_ /*= std::string()*/, unsigned rePort_ /*= 0*/ )
-:data(filename.c_str()), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currChunk(0), remote_user(remoteuser)
+:data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currChunk(0), remote_user(remoteuser)
 {
 	data.ResizeChunk(filesize);
 }
@@ -40,8 +40,8 @@ void sendJob::SetRemoteInfo( std::string IP_, unsigned rePort_ )
 	rePort = rePort_;
 }
 
-recJob::recJob(std::string filename, unsigned loPort_, char* IP_, unsigned rePort_, unsigned filesize)
-:data(filename.c_str()), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
+recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize)
+:data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
 {
   data.ResizeChunk(filesize);
 }
