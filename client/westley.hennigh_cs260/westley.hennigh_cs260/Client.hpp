@@ -42,6 +42,10 @@ public:
 
 	bool StillConnected ();  // checks various values to determine if we are still connected to the server (const time)
 	std::string GetUsername();
+
+	//^! hacked to get this working -----
+	unsigned udp_port;
+	// ------
 	
 private:
 	std::string username;    // the username for this client
