@@ -8,12 +8,12 @@
 //#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define ID_EDITCHILD 2
+#define ID_EDITCHILD  2
 #define ID_QUITBUTTON 100
-#define ID_OKBUTTON 101
+#define ID_OKBUTTON   101
 
-#define ID_FILE_EXIT	4001
-#define ID_FILE_SENDFILE	4002
+#define ID_FILE_EXIT	   4001
+#define ID_FILE_SENDFILE 4002
 
 /*
 This is really a cop-out. I should make a window class that has all sorts of
