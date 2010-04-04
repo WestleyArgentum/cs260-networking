@@ -58,8 +58,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	UsernameMsg meep;
 	temp = &meep;
 
-	char buffer[STD_BUFF_SIZE];
-	temp->WriteOut(buffer);*/
+	IMessage ohgod;
+	ohgod.myname;
+	char buffer[STD_BUFF_SIZE];*/
+	//temp->myname;
 
 	// -------------
 
@@ -120,22 +122,30 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				break;
 
 			case AcceptFileTransfer_Msg:
-				// if they have accepted search for the file transfer in the vec and push it as a job onto the file transfer thread
-				//RejectFileTransferMsg* mess = static_cast<RejectFileTransferMsg*>(message);
-				//std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
+				{
+					// if they have accepted search for the file transfer in the vec and push it as a job onto the file transfer thread
+					AcceptFileTransferMsg* mess = static_cast<AcceptFileTransferMsg*>(message);
+					std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
 
-				//for (unsigned i = 0; i < pendingsendjobs.size(); ++i)
-				//{
-				//	if (pendingsendjobs[i]->GetRemoteUser() == mess->recipient)  // this is the job being rejected
-				//	{
-				//		// add
-				//		pendingsendjobs.erase(pendingsendjobs.begin() + i);
-				//		break;
-				//	}
-				//}
+					for (unsigned i = 0; i < pendingsendjobs.size(); ++i)
+					{
+						if (pendingsendjobs[i]->GetRemoteUser() == mess->recipient)  // this is the job being accepted
+						{
+							// set up job
+							pendingsendjobs[i]->SetRemoteInfo(mess->ip_address, mess->port);
 
-				// if no file transfer was found there is an error... don't prompt the user, just ignore the accept
-				break;
+							// add job
+							FileTransferThread::GetInstance()->AddJob(pendingsendjobs[i]);
+
+							// remove job
+							pendingsendjobs.erase(pendingsendjobs.begin() + i);
+							break;
+						}
+					}
+
+					// if no file transfer was found there is an error... don't prompt the user, just ignore the accept
+					break;
+				}
 
 			case RejectFileTransfer_Msg:
 				{
