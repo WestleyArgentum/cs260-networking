@@ -206,6 +206,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
       case ID_FILE_SENDFILE:
         {
+        LRESULT index = SendMessage(/*lb handle*/, LB_GETCURSEL, 0, 0);
+
+        (index == LB_ERR)
+          return;
+
+        char* temp;
+        SendMessage(/*lb handle*/, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
+
         OPENFILENAME ofn;
         char szFileName[MAX_PATH] = "";
 
