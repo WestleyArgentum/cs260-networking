@@ -117,22 +117,24 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				break;
 
 			case RequestFileTransfer_Msg:
-				// in a request we should prompt the user with the information in the request and give them a yes / no option
-        RequestFileTransferMsg* mess = static_cast<RequestFileTransferMsg*>(message);
-				std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
-
-        std::string text = mess->propagator + " is sending you a " + mess->filename + "\nsize: " mess->file_size + "\nDo you want it?";
-        int question = MessageBox(hWnd, text.c_str(), MB_YESNO | MB_ICONQUESTION);
-
-        if(question == IDYES)
         {
-          AcceptFileTransferMsg();
-        }
-        else if(question == IDNO)
-          RejectFileTransferMsg();
-        else
-          return;
+				  // in a request we should prompt the user with the information in the request and give them a yes / no option
+          RequestFileTransferMsg* mess = static_cast<RequestFileTransferMsg*>(message);
+				  std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
 
+          std::string text;
+          text = mess->propagator + " is sending you a " + mess->filename + "\nsize: " mess->file_size + "\nDo you want it?";
+          int question = MessageBox(hWnd, text.c_str(), MB_YESNO | MB_ICONQUESTION);
+
+          if(question == IDYES)
+          {
+            AcceptFileTransferMsg();
+          }
+          else if(question == IDNO)
+            RejectFileTransferMsg();
+          else
+            return;
+        }
 
 				// in the event that we already have a job going... well unfortunately we may not get the ec so just reject
 				break;
@@ -245,7 +247,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File");
       AppendMenu(hSubMenu, MF_STRING, ID_FILE_EXIT,"&Exit");
       AppendMenu(hSubMenu, MF_STRING, ID_FILE_SENDFILE, "&SendFile...");
-      AppendMenu(hSubMenu, MF_STRING, ID_HELP_ABOUT, "&Test");
 
       SetMenu(hWnd, hMenu);
     break;
