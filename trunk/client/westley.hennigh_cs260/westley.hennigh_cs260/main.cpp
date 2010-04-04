@@ -64,6 +64,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	char buffer[STD_BUFF_SIZE];*/
 	//temp->myname;
 
+	//std::ostringstream text;
+	//text << /*mess->propagator <<*/ " is sending you a " /*<< mess->filename*/ << "\nsize: " /*<< mess->file_size*/ << "\nDo you want it?";
+	//int question = MessageBox(NULL /* FILL THIS IN WITH WHATEVER YOU WERE SUPPOSE TO!! */, text.str().c_str(), "hello", MB_YESNO | MB_ICONQUESTION);
 	// -------------
 
 	MSG msg;
@@ -117,27 +120,41 @@ int WINAPI WinMain(HINSTANCE hInstance,
 				break;
 
 			case RequestFileTransfer_Msg:
-        {
-				  // in a request we should prompt the user with the information in the request and give them a yes / no option
-          RequestFileTransferMsg* mess = static_cast<RequestFileTransferMsg*>(message);
-				  std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
+				{
+					// in a request we should prompt the user with the information in the request and give them a yes / no option
+					RequestFileTransferMsg* mess = static_cast<RequestFileTransferMsg*>(message);
 
-          std::string text;
-          text = mess->propagator + " is sending you a " + mess->filename + "\nsize: " mess->file_size + "\nDo you want it?";
-          int question = MessageBox(hWnd, text.c_str(), MB_YESNO | MB_ICONQUESTION);
+					std::ostringstream text;
+					text << mess->propagator << " is sending you a " << mess->filename << "\nsize: " << mess->file_size << "\nDo you want it?";
+					int question = MessageBox(NULL /* FILL THIS IN WITH WHATEVER YOU WERE SUPPOSE TO!! */, "File Transfer Request", text.str().c_str(), MB_YESNO | MB_ICONQUESTION);
 
-          if(question == IDYES)
-          {
-            AcceptFileTransferMsg();
-          }
-          else if(question == IDNO)
-            RejectFileTransferMsg();
-          else
-            return;
-        }
+					if(question == IDYES)
+					{
+						AcceptFileTransferMsg accepted;
+						accepted.file_size = mess->file_size;
+						accepted.ip_address = get local ADDRESS;
+						accepted.port = get LOCAL PORT;
+						accepted.propagator = mess->propagator;
+						accepted.recipient = mess->recipient;
+						Client::GetClient()->Send(&accepted);
 
-				// in the event that we already have a job going... well unfortunately we may not get the ec so just reject
-				break;
+						// now push a recv job onto the thread
+						recJob* newjob = new recJob(mess->filename, LOCAL port, mess->ip_address, mess->port, mess->file_size);
+						FileTransferThread::GetInstance()->AddJob(newjob)
+					}
+					else if(question == IDNO)
+					{
+						// it would be pretty pointless but since we don't do anything with the reject it would be
+						// kinda cool to be able to explicitly convert a request into a reject... just a thought.
+						RejectFileTransferMsg rejected;
+						rejected.propagator = mess->propagator;
+						rejected.recipient = mess->recipient;
+						Client::GetClient()->Send(&rejected);
+					}
+
+					// in the event that we already have a job going... well unfortunately we may not get the ec so just reject
+					break;
+				}
 
 			case AcceptFileTransfer_Msg:
 				{
@@ -247,6 +264,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File");
       AppendMenu(hSubMenu, MF_STRING, ID_FILE_EXIT,"&Exit");
       AppendMenu(hSubMenu, MF_STRING, ID_FILE_SENDFILE, "&SendFile...");
+      //AppendMenu(hSubMenu, MF_STRING, ID_HELP_ABOUT, "&Test");
 
       SetMenu(hWnd, hMenu);
     break;
@@ -295,7 +313,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
           if(GetOpenFileName(&ofn))
           {
-              // Do something useful with the filename stored in szFileName
+						// create a pending job, then send a request for a file transfer to the other client
           }
 
         break;
