@@ -232,26 +232,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					if(index == LB_ERR)
 						break;  // there has been an error...
 
-        char* temp;
-				SendMessage(SillyWindow::GetWindow()->listbox, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
+          char* temp = NULL;
+			    SendMessage(SillyWindow::GetWindow()->listbox, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
 
-        OPENFILENAME ofn;
-        char szFileName[MAX_PATH] = "";
+          OPENFILENAME ofn;
+          char szFileName[MAX_PATH] = "";
 
-        ZeroMemory(&ofn, sizeof(ofn));
+          ZeroMemory(&ofn, sizeof(ofn));
 
-        ofn.lStructSize = sizeof(ofn); // SEE NOTE BELOW
-        ofn.hwndOwner = hWnd;
-        ofn.lpstrFilter = "All Files (*.*)\0*.*\0";
-        ofn.lpstrFile = szFileName;
-        ofn.nMaxFile = MAX_PATH;
-        ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-        //ofn.lpstrDefExt = "txt";
+          ofn.lStructSize = sizeof(ofn); // SEE NOTE BELOW
+          ofn.hwndOwner = hWnd;
+          ofn.lpstrFilter = "All Files (*.*)\0*.*\0";
+          ofn.lpstrFile = szFileName;
+          ofn.nMaxFile = MAX_PATH;
+          ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+          //ofn.lpstrDefExt = "txt";
 
-        if(GetOpenFileName(&ofn))
-        {
-            // Do something useful with the filename stored in szFileName
-        }
+          if(GetOpenFileName(&ofn))
+          {
+              // Do something useful with the filename stored in szFileName
+          }
 
         break;
         }
