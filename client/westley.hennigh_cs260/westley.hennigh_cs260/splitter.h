@@ -9,16 +9,16 @@ enum
 class Data
 {
   public:
-    Data(const char*  filename_): filename(filename_){};
+    Data(std::string filename_): filename(filename_){};
     Data(std::vector<std::vector<char>> chunks_, size_t size_): chunks(chunks_), size(size_){};
     ~Data();
     int SplitFile(size_t size_);
-    int JoinFiles(char* filename_);
+    int JoinFiles(std::string filename_);
     std::vector<char> GetChunk(unsigned chunk);
     void SetChunk(std::vector<char>& data, unsigned chunk);
     void ResizeChunk(unsigned size_);
   private:
-    char*  filename;
+    std::string filename;
     std::vector<std::vector<char>> chunks;
     size_t size;
 };
