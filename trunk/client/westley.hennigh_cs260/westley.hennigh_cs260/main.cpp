@@ -232,7 +232,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					if(index == LB_ERR)
 						break;  // there has been an error...
 
-          char* temp = NULL;
+          char temp[MAX_PATH]= {0};
 			    SendMessage(SillyWindow::GetWindow()->listbox, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
 
           OPENFILENAME ofn;
