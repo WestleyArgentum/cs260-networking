@@ -40,7 +40,7 @@ void sendJob::SetRemoteInfo( std::string IP_, unsigned rePort_ )
 	rePort = rePort_;
 }
 
-recJob::recJob(char* filename, unsigned loPort_, char* IP_, unsigned rePort_, unsigned filesize)
+recJob::recJob(const char* filename, unsigned loPort_, char* IP_, unsigned rePort_, unsigned filesize)
 :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
 {
   data.ResizeChunk(filesize);

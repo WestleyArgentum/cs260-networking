@@ -27,9 +27,8 @@ public:
 
 	void AddJob (jobs* job);
 
-	// these are just hacks to get this working ----
+	//^! hacked to get this working ----
 	std::vector<sendJob*> pending_sendjobs;
-	std::vector<recJob*> pending_recvjobs;
 	// -------
 
 private:

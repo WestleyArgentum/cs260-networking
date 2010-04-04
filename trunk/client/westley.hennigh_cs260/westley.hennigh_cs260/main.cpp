@@ -136,19 +136,19 @@ int WINAPI WinMain(HINSTANCE hInstance,
 						char* localIP;
 
 						localIP = inet_ntoa(*(in_addr*)*localhost->h_addr_list);
-
 						// -------
+
 						AcceptFileTransferMsg accepted;
 						accepted.file_size = mess->file_size;
 						accepted.ip_address = localIP;
-						//accepted.port = get LOCAL PORT;
+						accepted.port = Client::GetClient()->udp_port;
 						accepted.propagator = mess->propagator;
 						accepted.recipient = mess->recipient;
-						Client::GetClient()->Send(&accepted);
+						Client::GetClient()->Send(accepted);
 
 						// now push a recv job onto the thread
-						//recJob* newjob = new recJob(mess->filename, LOCAL port, mess->ip_address, mess->port, mess->file_size);
-						//FileTransferThread::GetInstance()->AddJob(newjob);
+						recJob* newjob = new recJob(mess->filename, Client::GetClient()->udp_port, mess->ip_address, mess->port, mess->file_size);
+						FileTransferThread::GetInstance()->AddJob(newjob);
 					}
 					else if(question == IDNO)
 					{
@@ -157,7 +157,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 						RejectFileTransferMsg rejected;
 						rejected.propagator = mess->propagator;
 						rejected.recipient = mess->recipient;
-						Client::GetClient()->Send(&rejected);
+						Client::GetClient()->Send(rejected);
 					}
 
 					// in the event that we already have a job going... well unfortunately we may not get the ec so just reject

@@ -34,7 +34,7 @@ Client::Client(std::string text_file) : lost_server(false)
 	unsigned place;
 
 	// while there is more text and we have not read in the three values we need, read in lines
-	for (unsigned val_read = 0; std::getline(user_file, line) && val_read < 4; )
+	for (unsigned val_read = 0; std::getline(user_file, line) && val_read <= 4; )
 	{
 		if((place = line.find("IP: ")) != line.npos)
 		{
@@ -51,6 +51,13 @@ Client::Client(std::string text_file) : lost_server(false)
 		else if((place = line.find("Name: ")) != line.npos)
 		{
 			username = line.c_str() + place + sizeof("Name: ") - 1;  // -1 for null
+			++val_read;
+		}
+		else if((place = line.find("UdpPort: ")) != line.npos)
+		{
+			std::stringstream value;  // to extract the unsigned
+			value << line.c_str() + place + sizeof("UdpPort: ") - 1;  // -1 for null
+			value >> udp_port;
 			++val_read;
 		}
 		//else
