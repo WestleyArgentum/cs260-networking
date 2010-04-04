@@ -21,11 +21,12 @@ class jobs
 class sendJob : public jobs
 {
   public:
-		sendJob(char* filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize, std::string remoteuser);
+		sendJob(char* filename, unsigned filesize, unsigned loPort_, std::string remoteuser, std::string IP_ = std::string(), unsigned rePort_ = 0);
     virtual ~sendJob();
     virtual bool update();
     virtual void SetSocket(SuperSocket* sSock_);
 		std::string GetRemoteUser();
+		void SetRemoteInfo (std::string IP_, unsigned rePort_);
   private:
     Data data;
     SuperSocket* sSock;
