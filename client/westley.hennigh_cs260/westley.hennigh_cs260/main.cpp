@@ -139,6 +139,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 							// remove job
 							pendingsendjobs.erase(pendingsendjobs.begin() + i);
+
+							// prompt the user telling them transfer was accepted
+							the_conversation.append("File Transfer Accepted <3");
+							the_conversation.append("\r\n");
+
+							SendMessage(SillyWindow::GetWindow()->output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
+
+							// scroll the bar to the bottom
+							unsigned linecount = SendMessage(SillyWindow::GetWindow()->output, EM_GETLINECOUNT, 0, 0);
+							SendMessage(SillyWindow::GetWindow()->output, EM_LINESCROLL, 0, linecount);
 							break;
 						}
 					}
