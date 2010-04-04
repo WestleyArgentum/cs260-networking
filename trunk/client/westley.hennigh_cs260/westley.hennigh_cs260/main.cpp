@@ -130,9 +130,17 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 					if(question == IDYES)
 					{
+						// grab our ip address -----
+						hostent* localhost;
+						localhost = gethostbyname("");
+						char* localIP;
+
+						localIP = inet_ntoa(*(in_addr*)*localhost->h_addr_list);
+
+						// -------
 						AcceptFileTransferMsg accepted;
 						accepted.file_size = mess->file_size;
-						accepted.ip_address = get local ADDRESS;
+						accepted.ip_address = localIP;
 						accepted.port = get LOCAL PORT;
 						accepted.propagator = mess->propagator;
 						accepted.recipient = mess->recipient;
