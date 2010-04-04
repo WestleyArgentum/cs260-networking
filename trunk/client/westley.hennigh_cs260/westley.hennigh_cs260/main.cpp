@@ -22,12 +22,11 @@ On this assignment the client will be a little module that maintains a TCP conne
 The client will make available send / recv functionality that a main loop in main will use (really I should
 figure out a better model and run the chat stuff on it's own thread, but were out of time).
 
-Whenever a file transfer is requested we will spawn a file transfer thread that will take care of the details.
 Before we exit main we will display a message that we are waiting for file transfer to finish and then wait for
 the threads to exit.
 
 I feel that spawning a new thread for each file transfer is a terrible solution, instead we should have jobs and
-a file transfer thread that handles all of them... for now, though, we may not have time.
+a file transfer thread that handles all of them.
 */
 int WINAPI WinMain(HINSTANCE hInstance,
 									 HINSTANCE hPrevInstance,
@@ -54,6 +53,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if(meep)
 			return 0;
 	}*/
+
+	/*IMessage* temp;
+	UsernameMsg meep;
+	temp = &meep;
+
+	char buffer[STD_BUFF_SIZE];
+	temp->WriteOut(buffer);*/
 
 	// -------------
 
@@ -109,10 +115,24 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 			case RequestFileTransfer_Msg:
 				// in a request we should prompt the user with the information in the request and give them a yes / no option
+
+				// in the event that we already have a job going... well unfortunately we may not get the ec so just reject
 				break;
 
 			case AcceptFileTransfer_Msg:
 				// if they have accepted search for the file transfer in the vec and push it as a job onto the file transfer thread
+				//RejectFileTransferMsg* mess = static_cast<RejectFileTransferMsg*>(message);
+				//std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
+
+				//for (unsigned i = 0; i < pendingsendjobs.size(); ++i)
+				//{
+				//	if (pendingsendjobs[i]->GetRemoteUser() == mess->recipient)  // this is the job being rejected
+				//	{
+				//		// add
+				//		pendingsendjobs.erase(pendingsendjobs.begin() + i);
+				//		break;
+				//	}
+				//}
 
 				// if no file transfer was found there is an error... don't prompt the user, just ignore the accept
 				break;
@@ -134,6 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 					}
 
 					//^! also prompt the user saying that it was rejected
+
 					break;
 				}
 
@@ -206,13 +227,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
       case ID_FILE_SENDFILE:
         {
-        LRESULT index = SendMessage(/*lb handle*/, LB_GETCURSEL, 0, 0);
+					LRESULT index = SendMessage(SillyWindow::GetWindow()->listbox, LB_GETCURSEL, 0, 0);
 
-        (index == LB_ERR)
-          return;
+					if(index == LB_ERR)
+						break;  // there has been an error...
 
         char* temp;
-        SendMessage(/*lb handle*/, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
+				SendMessage(SillyWindow::GetWindow()->listbox, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
 
         OPENFILENAME ofn;
         char szFileName[MAX_PATH] = "";
