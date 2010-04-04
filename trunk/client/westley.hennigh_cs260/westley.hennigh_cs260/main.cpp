@@ -126,7 +126,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 					std::ostringstream text;
 					text << mess->propagator << " is sending you a " << mess->filename << "\nsize: " << mess->file_size << "\nDo you want it?";
-					int question = MessageBox(NULL /* FILL THIS IN WITH WHATEVER YOU WERE SUPPOSE TO!! */, "File Transfer Request", text.str().c_str(), MB_YESNO | MB_ICONQUESTION);
+          int question = MessageBox(NULL , "File Transfer Request", text.str().c_str(), MB_YESNO | MB_ICONQUESTION);
 
 					if(question == IDYES)
 					{
@@ -141,14 +141,14 @@ int WINAPI WinMain(HINSTANCE hInstance,
 						AcceptFileTransferMsg accepted;
 						accepted.file_size = mess->file_size;
 						accepted.ip_address = localIP;
-						accepted.port = get LOCAL PORT;
+						//accepted.port = get LOCAL PORT;
 						accepted.propagator = mess->propagator;
 						accepted.recipient = mess->recipient;
 						Client::GetClient()->Send(&accepted);
 
 						// now push a recv job onto the thread
-						recJob* newjob = new recJob(mess->filename, LOCAL port, mess->ip_address, mess->port, mess->file_size);
-						FileTransferThread::GetInstance()->AddJob(newjob)
+						//recJob* newjob = new recJob(mess->filename, LOCAL port, mess->ip_address, mess->port, mess->file_size);
+						//FileTransferThread::GetInstance()->AddJob(newjob);
 					}
 					else if(question == IDNO)
 					{
@@ -272,7 +272,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File");
       AppendMenu(hSubMenu, MF_STRING, ID_FILE_EXIT,"&Exit");
       AppendMenu(hSubMenu, MF_STRING, ID_FILE_SENDFILE, "&SendFile...");
-      //AppendMenu(hSubMenu, MF_STRING, ID_HELP_ABOUT, "&Test");
 
       SetMenu(hWnd, hMenu);
     break;
