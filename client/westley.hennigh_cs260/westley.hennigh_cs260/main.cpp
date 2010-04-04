@@ -12,6 +12,8 @@
 #include "udp.h"
 #include "Window.hpp"
 #include "Socket.hpp"
+#include "Jobs.h"
+#include "FileTransferThread.hpp"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -112,14 +114,28 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			case AcceptFileTransfer_Msg:
 				// if they have accepted search for the file transfer in the vec and push it as a job onto the file transfer thread
 
-				// if no file transfer was found there is an error... dont prompt the user, just ignore the accept
+				// if no file transfer was found there is an error... don't prompt the user, just ignore the accept
 				break;
 
 			case RejectFileTransfer_Msg:
-				// if they reject we should find the file transfer in the vec and remove it.
+				{
+					// if they reject we should find the file transfer in the vec and remove it.
+					RejectFileTransferMsg* mess = static_cast<RejectFileTransferMsg*>(message);
+					std::vector<sendJob*>& pendingsendjobs = FileTransferThread::GetInstance()->pending_sendjobs;
 
-				// also prompt the user saying that it was rejected
-				break;
+					for (unsigned i = 0; i < pendingsendjobs.size(); ++i)
+					{
+						if (pendingsendjobs[i]->GetRemoteUser() == mess->recipient)  // this is the job being rejected
+						{
+							delete pendingsendjobs[i];
+							pendingsendjobs.erase(pendingsendjobs.begin() + i);
+							break;
+						}
+					}
+
+					//^! also prompt the user saying that it was rejected
+					break;
+				}
 
 			case RequestForUsername_Msg:
 			case Invalid_Type:
