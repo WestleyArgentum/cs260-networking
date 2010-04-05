@@ -37,7 +37,10 @@ int ReliableUdpSocet::Send( IMessage* message )
 		if(count == SOCKET_ERROR)
 			return -1;
     else if(count)
+    {
+      Sleep(1);
       return 0;
+    }
   }
 	//while (GetTickCount() < time + (SEND_TIMEOUT * 1000))
 	//{
