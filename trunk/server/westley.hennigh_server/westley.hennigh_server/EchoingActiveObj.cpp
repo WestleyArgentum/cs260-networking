@@ -39,7 +39,7 @@ void EchoingThread::Run()
 			// loop through the sockets looking on each for data
 			for (unsigned i = 0; i < clients.size(); ++i)
 			{
-				memset(buffer, 0, BUFF_SIZE);
+				memset(buffer, 0, BUFF_SIZE);  //^! <-- why is this still here???
 
 				// if we find data then make it into a nice message and switch on the message type
 				ret = recv(clients[i].second, buffer, BUFF_SIZE, 0);
@@ -97,6 +97,44 @@ void EchoingThread::Run()
 						{
 							ret = send(clients[kitty].second, buffer, ret, 0);
 							//^! check for send error
+						}
+						break;
+					}
+
+				// lets just handle all the file transfer stuff in one... since it's all the same.
+				// in retrospect it would have been a better idea to just make the sending a function --> sendtouser() 
+				case RequestFileTransfer_Msg:
+				case AcceptFileTransfer_Msg:
+				case RejectFileTransfer_Msg:
+					{
+						std::string target;
+						switch(received_message->my_type)
+						{
+						case RequestFileTransfer_Msg:
+							{
+								target = static_cast<RequestFileTransferMsg*>(received_message)->recipient;
+								break;
+							}
+						case AcceptFileTransfer_Msg:
+							{
+								target = static_cast<AcceptFileTransferMsg*>(received_message)->propagator;
+								break;
+							}
+						case RejectFileTransfer_Msg:
+							{
+								target = static_cast<RejectFileTransferMsg*>(received_message)->propagator;
+								break;
+							}
+						}
+
+						// rout the message to the recipient
+						for (unsigned i = 0; i < clients.size(); ++i)
+						{
+							if (clients[i].first == target)
+							{
+								ret = send(clients[i].second, buffer, ret, 0);
+								break;
+							}
 						}
 						break;
 					}
