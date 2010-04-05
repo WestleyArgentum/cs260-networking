@@ -40,6 +40,15 @@ void sendJob::SetRemoteInfo( std::string IP_, unsigned rePort_ )
 	rePort = rePort_;
 }
 
+void sendJob::start()
+{
+	data.SplitFile(5000);
+}
+
+void sendJob::end()
+{
+	//^! do anything you need to do cleanup wise here!
+}
 recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize)
 :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
 {
@@ -71,3 +80,17 @@ void recJob::SetSocket(SuperSocket* sSock_)
 
 recJob::~recJob()
 {}
+
+void recJob::start()
+{
+	// I don't thing recJobs really need startup code.
+}
+
+void recJob::end()
+{
+	data.JoinFiles(data.filename); // <--- why do i have to pass it it's own data?
+}
+void jobs::start()
+{
+	throw std::exception("The method or operation is not implemented.");
+}

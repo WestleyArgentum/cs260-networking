@@ -17,8 +17,9 @@ class Data
     std::vector<char> GetChunk(unsigned chunk);
     void SetChunk(std::vector<char>& data, unsigned chunk);
     void ResizeChunk(unsigned size_);
+		std::string filename;
   private:
-    std::string filename;
+    
     std::vector<std::vector<char>> chunks;
     size_t size;
 };
