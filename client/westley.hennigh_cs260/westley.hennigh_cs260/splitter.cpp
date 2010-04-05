@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include "splitter.h"
 
-// I Define the max buf0fer size equal to 4069 bytes.
-#define MAX_SIZE 4096
-
 Data::~Data()
 {
   std::vector<char>* temp;
@@ -132,10 +129,14 @@ int Data::JoinFiles(std::string filename_)
 }
 std::vector<char> Data::GetChunk(unsigned chunk)
 {
+  if(chunk > chunks.size())
+    return chunks[0];
   return chunks[chunk];
 }
 void Data::SetChunk(std::vector<char>& data, unsigned chunk)
 {
+  if(chunk > chunks.size())
+    return;
   chunks[chunk] = data;
 }
 void Data::ResizeChunk(unsigned size_)

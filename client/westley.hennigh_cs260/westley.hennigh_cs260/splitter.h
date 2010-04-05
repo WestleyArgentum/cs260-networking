@@ -3,6 +3,9 @@
 
 #include <vector>
 
+// I Define the max buf0fer size equal to 4069 bytes.
+#define MAX_SIZE 4096
+
 enum
 {E_BAD_SOURCE=-1, E_BAD_DESTINATION=-2, E_NO_MEMORY=-3, E_NO_ACTION=-4, E_SMALL_SIZE=-5};
 
@@ -18,8 +21,8 @@ class Data
     void SetChunk(std::vector<char>& data, unsigned chunk);
     void ResizeChunk(unsigned size_);
 		std::string filename;
+
   private:
-    
     std::vector<std::vector<char>> chunks;
     size_t size;
 };

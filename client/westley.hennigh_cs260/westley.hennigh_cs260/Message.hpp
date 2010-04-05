@@ -10,6 +10,8 @@
 #include <iostream>
 #include <vector>
 
+#include "Defines.hpp"
+
 enum Message_Type  // the different message types
 {
 	Invalid_Type,
@@ -317,7 +319,10 @@ struct FileDataMsg : public IMessage
 
 		// copy the vector over, the first 4 bytes are the size
 		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE) = data.size();
-		memcpy(buffer + HEADERSIZE + sizeof(unsigned), &(data[0]), data.size());
+    //char meow[4096];
+    
+    unsigned larry = data.size();
+    memcpy(buffer + HEADERSIZE + sizeof(unsigned), &data[0], data.size());
 
 		// copy over the chunk number
 		*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + sizeof(unsigned) + data.size()) = chunknum;

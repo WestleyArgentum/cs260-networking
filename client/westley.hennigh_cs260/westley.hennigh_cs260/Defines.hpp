@@ -3,4 +3,9 @@
 // CS260 Assignment 3
 // Mar 19th 2010
 
-const unsigned STD_BUFF_SIZE = 1024;
+#ifndef MYDEFINES
+#define MYDEFINES
+
+const unsigned STD_BUFF_SIZE = 9001;
+
+#endif
