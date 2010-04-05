@@ -13,10 +13,12 @@
 FileTransferThread* FileTransferThread::me = NULL;
 
 /*
-No longer in use, info on connection will come in with jobs (for now just the first one will be looked at).
 */
 FileTransferThread::FileTransferThread() : quitflag(false)
-{}
+{
+	// actually I decided that for this one we can just wake pronto
+	Wake();
+}
 
 FileTransferThread::~FileTransferThread()
 {}
