@@ -105,7 +105,7 @@ IMessage* ConstructMessage(char* buffer)
 			unsigned size = *reinterpret_cast<unsigned*>(buffer + HEADERSIZE);
 
 			// fill the vector
-			message->data.resize(size);
+			//message->data.resize(size);
 			for(unsigned i = 0; i < size; ++i)
 				message->data.push_back(*reinterpret_cast<unsigned*>(buffer + HEADERSIZE + sizeof(unsigned) + i));
 
