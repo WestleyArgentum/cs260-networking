@@ -98,5 +98,5 @@ void recJob::start()
 
 void recJob::end()
 {
-	data.JoinFiles(); // <--- why do i have to pass it it's own data?
+	data.JoinFiles();
 }
