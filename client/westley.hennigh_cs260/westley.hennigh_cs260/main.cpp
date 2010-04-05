@@ -125,7 +125,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 					std::ostringstream text;
 					text << mess->propagator << " is sending you a " << mess->filename << "\nsize: " << mess->file_size << "\nDo you want it?";
-          int question = MessageBox(NULL , "File Transfer Request", text.str().c_str(), MB_YESNO | MB_ICONQUESTION);
+          int question = MessageBox(NULL, text.str().c_str(), "File Transfer Request", MB_YESNO | MB_ICONQUESTION);
 
 					if(question == IDYES)
 					{

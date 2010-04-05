@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cmath>
 #include "splitter.h"
 
 Data::~Data()
@@ -136,7 +137,7 @@ void Data::SetChunk(std::vector<char>& data, unsigned chunk)
 }
 unsigned Data::GetSize(void)
 {
-  return chunks.size();
+  return (ceil((float)size/(float)4096));
 }
 void Data::ResizeChunk(unsigned size_)
 {
