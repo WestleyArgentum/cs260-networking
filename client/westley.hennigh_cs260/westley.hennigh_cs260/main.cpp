@@ -321,14 +321,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
           if(GetOpenFileName(&ofn))
           {
 						// create a pending job, then send a request for a file transfer to the other client
-            sendJob(FileName, strlen(FileName), gethostbyname(""));
+						FileTransferThread::GetInstance()->pending_sendjobs.push_back(new sendJob(FileName, 9001, Client::GetClient()->udp_port, /*REMOTE USERNAME HERE*/));
+
+						// grab our ip address -----
+						hostent* localhost;
+						localhost = gethostbyname("");
+						char* localIP;
+
+						localIP = inet_ntoa(*(in_addr*)*localhost->h_addr_list);
+						// -------
 
             RequestFileTransferMsg reqTran;
-            reqTran.file_size = strlen(FileName);
+            reqTran.file_size = 9001;
             reqTran.filename = FileName;
-            //reqTran.ip_address = ;
-            //reqTran.port = ;
-            //reqTran.propagator = ;
+            reqTran.ip_address = localIP;
+						reqTran.port = Client::GetClient()->udp_port;
+						reqTran.propagator = Client::GetClient()->username;
             reqTran.recipient = pidgin;
           }
 
