@@ -17,7 +17,10 @@ bool sendJob::update()
 	// send that message across
   sSock->Send(&message);
 
-	return false;
+  if(currChunk == data.GetSize()-1)
+    done = true;
+
+	return done;
 }
 void sendJob::SetSocket(SuperSocket* sSock_)
 {
@@ -67,9 +70,12 @@ bool recJob::update()
 
 		data.SetChunk(static_cast<FileDataMsg*>(mess)->data, static_cast<FileDataMsg*>(mess)->chunknum);
 		delete(mess);
+
+    if(static_cast<FileDataMsg*>(mess)->chunknum == data.GetSize()-1)
+      done = true;
 	}
 
-	return false;
+	return done;
 }
 void recJob::SetSocket(SuperSocket* sSock_)
 {
