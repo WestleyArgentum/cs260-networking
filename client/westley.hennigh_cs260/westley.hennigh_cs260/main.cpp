@@ -320,6 +320,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
           if(GetOpenFileName(&ofn))
           {
+            FILE *pFile = NULL;
+            pFile = fopen(FileName, "rb");
+            fseek(pFile, 0, SEEK_END);
+            int FileSize = ftell(pFile);
+            fclose(pFile);
+
 						// create a pending job, then send a request for a file transfer to the other client
 						FileTransferThread::GetInstance()->pending_sendjobs.push_back(new sendJob(FileName, 9001, Client::GetClient()->udp_port, pidgin));
 
@@ -332,7 +338,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						// -------
 
             RequestFileTransferMsg reqTran;
-            reqTran.file_size = 9001;
+            reqTran.file_size = FileSize;
             reqTran.filename = FileName;
             reqTran.ip_address = localIP;
 						reqTran.port = Client::GetClient()->udp_port;
