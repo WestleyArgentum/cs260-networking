@@ -7,6 +7,8 @@
 #define SSOCKET_H
 
 #include <string>
+#include "winsock2.h"
+#pragma comment(lib, "ws2_32.lib")
 
 #include "Message.hpp"
 
@@ -19,24 +21,43 @@ of the people using it and I really cant bloat the base class with derived speci
 class SuperSocket
 {
 public:
-	virtual int Send (unsigned id, IMessage* message) = 0;
-	virtual IMessage* Recv (unsigned id) = 0;
+	virtual ~SuperSocket () {}
+
+	virtual int Send (IMessage* message) = 0;
+	virtual IMessage* Recv () = 0;
 };
 
 
+/*
+This is sort of a lie. I do not actually maintain a connection quite as
+robustly as TCP might. For instance, I don't ever send keep alive packets, I just
+assume that you are using this understanding how it actually works, not how it should.
+*/
 class ReliableUdpSocet : public SuperSocket
 {
 public:
-	virtual int Send (unsigned id, IMessage* message);
-	virtual IMessage* Recv (unsigned id);
+	virtual ~ReliableUdpSocet ();
 
-	// Sets up a "connection" with another host and returns an id that will be your
-	// identification for send / recv calls (save that id!).
-	unsigned RegisterConnection (std::string remote_ip, unsigned remote_port);
-	void DropConnection (unsigned id);
+	virtual int Send (IMessage* message);
+	virtual IMessage* Recv ();
+
+	// We will maintain a connection over UDP
+	int Connect (unsigned local_port_, std::string remote_ip_, unsigned remote_port_);
+
+	unsigned GetLocalPort ();
 
 private:
-	unsigned connection_id;
+	std::string remote_ip;
+	unsigned remote_port;
+	unsigned local_port;
+
+	sockaddr_in remoteAddress;
+	SOCKET socket;
+
 };
+
+
+// Below are socket functions I think are useful.
+int PollForAck( SOCKET sock, sockaddr_in remote, unsigned millisec );
 
 #endif

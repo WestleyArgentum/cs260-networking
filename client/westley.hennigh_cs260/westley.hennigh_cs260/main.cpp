@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 						Client::GetClient()->Send(rejected);
 					}
 
-					// in the event that we already have a job going... well unfortunately we may not get the ec so just reject
+					//^! in the event that we already have a job going... well unfortunately we may not get the ec so just reject
 					break;
 				}
 
@@ -327,7 +327,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             fclose(pFile);
 
 						// create a pending job, then send a request for a file transfer to the other client
-						FileTransferThread::GetInstance()->pending_sendjobs.push_back(new sendJob(FileName, 9001, Client::GetClient()->udp_port, pidgin));
+						FileTransferThread::GetInstance()->pending_sendjobs.push_back(new sendJob(FileName, FileSize, Client::GetClient()->udp_port, pidgin));
 
 						// grab our ip address -----
 						hostent* localhost;
