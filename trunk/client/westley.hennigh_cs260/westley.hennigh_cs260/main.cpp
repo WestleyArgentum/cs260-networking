@@ -300,20 +300,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					LRESULT index = SendMessage(SillyWindow::GetWindow()->listbox, LB_GETCURSEL, 0, 0);
 
 					if(index == LB_ERR)
-						break;  // there has been an error...
+						break;  // there has been an error... :(
 
-          char temp[MAX_PATH]= {0};
-			    SendMessage(SillyWindow::GetWindow()->listbox, LB_GETTEXT, (WPARAM)index, (LPARAM)temp);
+          char pidgin[MAX_PATH]= {0};
+			    SendMessage(SillyWindow::GetWindow()->listbox, LB_GETTEXT, (WPARAM)index, (LPARAM)pidgin);
 
           OPENFILENAME ofn;
-          char szFileName[MAX_PATH] = "";
+          char FileName[MAX_PATH] = "";
 
           ZeroMemory(&ofn, sizeof(ofn));
 
           ofn.lStructSize = sizeof(ofn); // SEE NOTE BELOW
           ofn.hwndOwner = hWnd;
           ofn.lpstrFilter = "All Files (*.*)\0*.*\0";
-          ofn.lpstrFile = szFileName;
+          ofn.lpstrFile = FileName;
           ofn.nMaxFile = MAX_PATH;
           ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
           //ofn.lpstrDefExt = "txt";
@@ -321,6 +321,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
           if(GetOpenFileName(&ofn))
           {
 						// create a pending job, then send a request for a file transfer to the other client
+            sendJob(FileName, strlen(FileName), gethostbyname(""));
+
+            RequestFileTransferMsg reqTran;
+            reqTran.file_size = strlen(FileName);
+            reqTran.filename = FileName;
+            //reqTran.ip_address = ;
+            //reqTran.port = ;
+            //reqTran.propagator = ;
+            reqTran.recipient = pidgin;
           }
 
         break;
