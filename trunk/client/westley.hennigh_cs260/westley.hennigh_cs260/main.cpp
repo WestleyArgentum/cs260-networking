@@ -344,6 +344,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						reqTran.port = Client::GetClient()->udp_port;
 						reqTran.propagator = Client::GetClient()->GetUsername();
             reqTran.recipient = pidgin;
+
+						Client::GetClient()->Send(reqTran);
           }
 
         break;

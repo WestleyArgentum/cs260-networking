@@ -68,11 +68,24 @@ IMessage* ConstructMessage(char* buffer)
 	case RequestFileTransfer_Msg:
 		{
 			RequestFileTransferMsg* message = new RequestFileTransferMsg;
-			message->propagator = buffer + HEADERSIZE;
-			message->recipient = buffer + HEADERSIZE + length(message->propagator);
-			message->filename = buffer + HEADERSIZE + length(message->propagator) + length(message->recipient);
-			message->port = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->filename)) );
-			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->filename) + sizeof(unsigned)) );
+			message->propagator   = buffer + HEADERSIZE;
+			message->recipient    = buffer + HEADERSIZE + length(message->propagator);
+			message->ip_address   = buffer + HEADERSIZE + length(message->propagator) + length(message->recipient);
+			message->filename     = buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->ip_address);
+			message->port      = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->ip_address) + length(message->filename)) );
+			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->ip_address) + length(message->filename) + sizeof(unsigned)) );
+			return message;
+			break;
+		}
+
+	case AcceptFileTransfer_Msg:
+		{
+			AcceptFileTransferMsg* message = new AcceptFileTransferMsg;
+			message->propagator   = buffer + HEADERSIZE;
+			message->recipient    = buffer + HEADERSIZE + length(message->propagator);
+			message->ip_address   = buffer + HEADERSIZE + length(message->propagator) + length(message->recipient);
+			message->port      = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->ip_address)) );
+			message->file_size = *( reinterpret_cast<unsigned*>(buffer + HEADERSIZE + length(message->propagator) + length(message->recipient) + length(message->ip_address) + sizeof(unsigned)) );
 			return message;
 			break;
 		}
