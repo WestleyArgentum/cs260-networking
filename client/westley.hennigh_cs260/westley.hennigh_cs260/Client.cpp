@@ -53,10 +53,10 @@ Client::Client(std::string text_file) : lost_server(false)
 			username = line.c_str() + place + sizeof("Name: ") - 1;  // -1 for null
 			++val_read;
 		}
-		else if((place = line.find("UdpPort: ")) != line.npos)
+		else if((place = line.find("Udp: ")) != line.npos)
 		{
 			std::stringstream value;  // to extract the unsigned
-			value << line.c_str() + place + sizeof("UdpPort: ") - 1;  // -1 for null
+			value << line.c_str() + place + sizeof("Udp: ") - 1;  // -1 for null
 			value >> udp_port;
 			++val_read;
 		}
