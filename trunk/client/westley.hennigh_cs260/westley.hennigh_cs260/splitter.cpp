@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "splitter.h"
 
-// I Define the max buffer size equal to 4069 bytes.
+// I Define the max buf0fer size equal to 4069 bytes.
 #define MAX_SIZE 4096
 
 Data::~Data()
@@ -40,8 +40,10 @@ int Data::SplitFile(size_t size_)
     return E_BAD_SOURCE;
 
   // Buffer to move data from the parent to the different children.
-  std::vector<char>* buffer;
-  buffer->reserve(size);
+  std::vector<char> vecbuf;
+  vecbuf.resize(MAX_SIZE);
+
+  char buffer[MAX_SIZE];
   // If the buffer wasnt created return memory wasnt found.
   //if(buffer == NULL)
   //  return E_NO_MEMORY;
@@ -65,8 +67,10 @@ int Data::SplitFile(size_t size_)
     // If nothing is loaded on the first fread break out of the loop.
     if(!temp)
       break;
+    for(unsigned i = 0; i<temp; ++i)
+      vecbuf[i] = buffer[i];
 
-    chunks.push_back(*buffer);
+    chunks.push_back(vecbuf);
 
     // Until the child size is equal to the size the user requests or until it
     //    hits the end of the parent file, fill the buffer and transfer data.
@@ -78,7 +82,10 @@ int Data::SplitFile(size_t size_)
         temp = fread(buffer, sizeof(char), sizeof(char) * MAX_SIZE, fp_parent);
 
       // Writes the buffer into the child currently opened child file.
-      chunks.push_back(*buffer);
+      for(unsigned i = 0; i<temp; ++i)
+        vecbuf[i] = buffer[i];
+
+      chunks.push_back(vecbuf);
 
       // Keeps track of the child size.
       child_size += temp;
