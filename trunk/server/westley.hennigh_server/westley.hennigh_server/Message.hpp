@@ -82,6 +82,18 @@ struct IMessage
 	}
 	// ----------------------------
 
+	/*virtual const IMessage* operator-> () const
+	{
+		return this;
+	}
+
+	template <typename type>
+	operator type* () 
+	{
+		return this;
+	}*/
+
+
 	Message_Type my_type;  // every message will have a type associated with it
 };
 
@@ -89,6 +101,11 @@ struct IMessage
 struct UsernameMsg : public IMessage
 {
 	UsernameMsg () : IMessage(Username_Msg) {}
+
+	/*virtual const UsernameMsg* operator -> () const
+	{
+		return this;
+	}*/
 
 	// Serialization for message -------------------
 	virtual unsigned WriteOut (char* buffer)
