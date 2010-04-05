@@ -21,9 +21,8 @@ Data::~Data()
 \return int - error or chuncks if successful.
 */
 /******************************************************************************/
-int Data::SplitFile(size_t size_)
+int Data::SplitFile(void)
 {
-  size = size_;
   // The created files name buffer.
   char current_file_name[256];
 
@@ -99,10 +98,8 @@ int Data::SplitFile(size_t size_)
 \return int - Based on how the function ran, note 0 means it ran successfully.
 */
 /******************************************************************************/
-int Data::JoinFiles(std::string filename_)
+int Data::JoinFiles(void)
 {
-  filename = filename_;
-
   // Create a pointer to the parent file and opens it.
   FILE *fp_parent = fopen(filename.c_str(), "wb");
 
@@ -114,8 +111,8 @@ int Data::JoinFiles(std::string filename_)
   // Until I have seen every inputed file go through them all and take there data.
   for(unsigned i = 0; i < chunks.size(); ++i)
   {
-    char* temp = new char(chunks[i].size());
-    for(unsigned j = 0; j < chunks[i].size(); ++j)
+    char temp[MAX_SIZE];
+    for(unsigned j = 0; j < MAX_SIZE; ++j)
       temp[j] = chunks[i][j];
     fwrite(temp, sizeof(char), size, fp_parent);
     delete [] temp;

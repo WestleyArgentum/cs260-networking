@@ -15,8 +15,8 @@ class Data
     Data(std::string filename_, unsigned filesize): filename(filename_), size(filesize){};
     Data(std::vector<std::vector<char>> chunks_, size_t size_): chunks(chunks_), size(size_){};
     ~Data();
-    int SplitFile(size_t size_);
-    int JoinFiles(std::string filename_);
+    int SplitFile(void);
+    int JoinFiles(void);
     std::vector<char> GetChunk(unsigned chunk);
     void SetChunk(std::vector<char>& data, unsigned chunk);
     void ResizeChunk(unsigned size_);
