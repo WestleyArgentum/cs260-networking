@@ -5,12 +5,9 @@
 Data::~Data()
 {
   std::vector<char>* temp;
-  unsigned chunk_count = chunks.size();
-  while(chunk_count)
+  for(unsigned i = 0; i < chunks.size(); ++i)
   {
-    temp = &chunks[chunk_count++];
-    chunks.pop_back();
-    delete temp;
+    chunks[i].clear();
   }
   chunks.clear();
 }
@@ -129,15 +126,19 @@ int Data::JoinFiles(std::string filename_)
 }
 std::vector<char> Data::GetChunk(unsigned chunk)
 {
-  if(chunk > chunks.size())
+  if(chunk >= chunks.size())
     return chunks[0];
   return chunks[chunk];
 }
 void Data::SetChunk(std::vector<char>& data, unsigned chunk)
 {
-  if(chunk > chunks.size())
+  if(chunk >= chunks.size())
     return;
   chunks[chunk] = data;
+}
+unsigned Data::GetSize(void)
+{
+  return chunks.size();
 }
 void Data::ResizeChunk(unsigned size_)
 {

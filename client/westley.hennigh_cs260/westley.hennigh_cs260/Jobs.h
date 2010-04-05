@@ -15,7 +15,6 @@ class jobs
     virtual void SetSocket(SuperSocket* sSock_) = 0;
 		virtual void start () = 0;
 		virtual void end () = 0;
-	private:
 		bool done;
 };
 
