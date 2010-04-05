@@ -132,9 +132,7 @@ std::vector<char> Data::GetChunk(unsigned chunk)
 }
 void Data::SetChunk(std::vector<char>& data, unsigned chunk)
 {
-  if(chunk >= chunks.size())
-    return;
-  chunks[chunk] = data;
+  chunks.push_back(data);
 }
 unsigned Data::GetSize(void)
 {
