@@ -3,7 +3,7 @@
 sendJob::sendJob(std::string filename, unsigned filesize, unsigned loPort_, std::string remoteuser, std::string IP_ /*= std::string()*/, unsigned rePort_ /*= 0*/ )
 :data(filename), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currChunk(0), remote_user(remoteuser)
 {
-	data.ResizeChunk(filesize);
+	//data.ResizeChunk(filesize);
 }
 
 bool sendJob::update()
@@ -11,7 +11,8 @@ bool sendJob::update()
 	// construct a message from a chunk of data
 	FileDataMsg message;
 	message.data = data.GetChunk(currChunk);
-	message.chunknum = currChunk++;
+	message.chunknum = currChunk;
+  ++currChunk;
 
 	// send that message across
   sSock->Send(&message);
@@ -42,7 +43,7 @@ void sendJob::SetRemoteInfo( std::string IP_, unsigned rePort_ )
 
 void sendJob::start()
 {
-	data.SplitFile(5000);
+	data.SplitFile(MAX_SIZE);
 }
 
 void sendJob::end()
@@ -89,8 +90,4 @@ void recJob::start()
 void recJob::end()
 {
 	data.JoinFiles(data.filename); // <--- why do i have to pass it it's own data?
-}
-void jobs::start()
-{
-	throw std::exception("The method or operation is not implemented.");
 }
