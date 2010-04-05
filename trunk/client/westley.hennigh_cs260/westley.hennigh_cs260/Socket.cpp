@@ -19,12 +19,12 @@ int ReliableUdpSocet::Send( IMessage* message )
 	char buffer [STD_BUFF_SIZE];
 
 	// write message into buffer
-	message->WriteOut(buffer);
+	unsigned msg_size = message->WriteOut(buffer);
 
 	// loop until sent
 	while (GetTickCount() < time + (SEND_TIMEOUT * 1000))
 	{
-		ret = sendto(socket, buffer, STD_BUFF_SIZE, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
+		ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
 		if(ret == SOCKET_ERROR)
 		{
 			ret = WSAGetLastError();
