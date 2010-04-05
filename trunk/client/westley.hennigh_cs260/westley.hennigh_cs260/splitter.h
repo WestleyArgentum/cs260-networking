@@ -12,7 +12,7 @@ enum
 class Data
 {
   public:
-    Data(std::string filename_): filename(filename_){};
+    Data(std::string filename_, unsigned filesize): filename(filename_), size(filesize){};
     Data(std::vector<std::vector<char>> chunks_, size_t size_): chunks(chunks_), size(size_){};
     ~Data();
     int SplitFile(size_t size_);
