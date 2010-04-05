@@ -198,7 +198,7 @@ struct RequestFileTransferMsg : public IMessage
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient) + (2 * sizeof(unsigned));
+		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + length(filename) + (2 * sizeof(unsigned));
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
@@ -244,7 +244,7 @@ struct AcceptFileTransferMsg : public IMessage
 	virtual unsigned WriteOut (char* buffer)
 	{
 		// calculate the total size of the message
-		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient) + (2 * sizeof(unsigned));
+		unsigned total_size = HEADERSIZE + length(propagator) + length(recipient) + length(ip_address) + (2 * sizeof(unsigned));
 
 		// set up the size of the message
 		*reinterpret_cast<unsigned*>(buffer) = total_size;
