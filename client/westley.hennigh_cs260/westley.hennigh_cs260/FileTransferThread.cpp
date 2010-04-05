@@ -58,8 +58,11 @@ void FileTransferThread::AddJob( jobs* job )
 {
 	// append the socket pointer into the job, the job will set up the socket for it's
 	// remote host and stuff
-
 	job->SetSocket(&socket);
+
+	// now add the job to the list of things to be updated!
+	Lock lock(jobs_mutex);
+	activejobs.push_back(job);
 }
 
 FileTransferThread* FileTransferThread::GetInstance()
