@@ -38,6 +38,7 @@ void FileTransferThread::Run()
 			{
 				if(activejobs[i]->update())
 				{
+					activejobs[i]->end();
 					delete activejobs[i];
 					activejobs.erase(activejobs.begin() + i);
 				}
@@ -62,9 +63,13 @@ void FileTransferThread::AddJob( jobs* job )
 	// remote host and stuff
 	job->SetSocket(&socket);
 
+	// start the job
+	job->start();
+
 	// now add the job to the list of things to be updated!
 	Lock lock(jobs_mutex);
 	activejobs.push_back(job);
+
 }
 
 FileTransferThread* FileTransferThread::GetInstance()

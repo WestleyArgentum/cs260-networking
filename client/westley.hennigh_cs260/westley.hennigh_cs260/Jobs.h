@@ -13,7 +13,8 @@ class jobs
 		virtual ~jobs() {};
     virtual bool update() = 0;
     virtual void SetSocket(SuperSocket* sSock_) = 0;
-
+		virtual void start () = 0;
+		virtual void end () = 0;
 	private:
 		bool done;
 };
@@ -27,6 +28,8 @@ class sendJob : public jobs
     virtual void SetSocket(SuperSocket* sSock_);
 		std::string GetRemoteUser();
 		void SetRemoteInfo (std::string IP_, unsigned rePort_);
+		virtual void start ();
+		virtual void end();
   private:
     Data data;
     SuperSocket* sSock;
@@ -44,6 +47,8 @@ class recJob : public jobs
     virtual ~recJob();
     virtual bool update();
     virtual void SetSocket(SuperSocket* sSock_);
+		virtual void start ();
+		virtual void end();
   private:
     Data data;
     SuperSocket* sSock;
