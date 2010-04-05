@@ -46,7 +46,7 @@ void sendJob::SetRemoteInfo( std::string IP_, unsigned rePort_ )
 
 void sendJob::start()
 {
-	data.SplitFile(MAX_SIZE);
+	data.SplitFile();
 }
 
 void sendJob::end()
@@ -98,5 +98,5 @@ void recJob::start()
 
 void recJob::end()
 {
-	data.JoinFiles(data.filename); // <--- why do i have to pass it it's own data?
+	data.JoinFiles(); // <--- why do i have to pass it it's own data?
 }
