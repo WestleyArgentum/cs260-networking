@@ -42,6 +42,9 @@ int ReliableUdpSocet::Send( IMessage* message )
       return 0;
     }
   }*/
+
+
+
 	while (GetTickCount() < time + (SEND_TIMEOUT * 1000))
 	{
 		ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
@@ -53,6 +56,11 @@ int ReliableUdpSocet::Send( IMessage* message )
 
 		if(PollForAck(socket, remoteAddress, 500) == 1)
 			return 0;  // that means the packet was sent :)
+    else
+    {
+      int i = 5;
+    }
+
 		//else
 			//return -1;  // there was a problem while polling
 	}
@@ -78,7 +86,18 @@ IMessage* ReliableUdpSocet::Recv( )
 			return NULL;  //^! something went wrong
 	}
 	else if (count)
-		return ConstructMessage(buffer);
+  {
+    // fire off a quick ack
+    FileDataMsg* recv_msg = static_cast<FileDataMsg*>(ConstructMessage(buffer));
+
+    FileDataAckMsg ack_msg;
+    ack_msg.ack = recv_msg->chunknum;
+    char tempbuff [STD_BUFF_SIZE];
+    int s = ack_msg.WriteOut(tempbuff);
+    sendto(socket, tempbuff, s, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
+
+    return recv_msg;
+  }
 
 	return NULL;
 }
@@ -157,7 +176,7 @@ int PollForAck( SOCKET sock, sockaddr_in remote, unsigned millisec )
 	SecureZeroMemory(&remoteAddress, sizeof(remoteAddress));
 	int remoteAddresslength = sizeof(remoteAddress);
 
-	// right now the buffer will not be used, it will just get the data
+	// right now the buffer will get the data
 	char buffer [STD_BUFF_SIZE];
 
 	unsigned breaktime = GetTickCount() + millisec;
@@ -171,8 +190,7 @@ int PollForAck( SOCKET sock, sockaddr_in remote, unsigned millisec )
 			//^! right now we do not have an ack param to check with so we assume they wanted to confirm delivery.
 
 			//^! check to see that it came from the right remote socket
-			if(1)
-				return 1;
+			return 1;
 		}
 	}
 	return 0;
