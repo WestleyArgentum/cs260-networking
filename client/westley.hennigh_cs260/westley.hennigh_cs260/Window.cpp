@@ -31,7 +31,7 @@ const int okButtonPosX = 670;
 const int okButtonPosY = 450;
 
 const int quitButtonSizeX = 75;
-const int quitButtonSizeY = 400;
+const int quitButtonSizeY = 300;
 const int quitButtonPosX = 30;
 const int quitButtonPosY = 10;
 
@@ -153,6 +153,22 @@ void SillyWindow::MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, L
 		hInstance,
 		NULL
 		);
+
+  // progress bar
+  progress = CreateWindow(
+		_T("EDIT"),
+		NULL,
+		WS_VISIBLE | WS_CHILD | ES_READONLY | WS_BORDER, //adding readonly for this one
+		20, 
+		350,
+		100, 
+		30,
+		hWnd,//same parent window as before
+		NULL,
+		hInstance,
+		NULL
+		);
+  // ----
 
 	HWND hwndButton = CreateWindow( 
 		_T("BUTTON"),  // Predefined class; Unicode assumed. 

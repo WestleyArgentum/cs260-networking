@@ -21,6 +21,7 @@ class Data
     void SetChunk(std::vector<char>& data, unsigned chunk);
     void ResizeChunk(unsigned size_);
     unsigned GetSize(void);
+    unsigned GetChunkSize(void);
 		std::string filename;
 
   private:

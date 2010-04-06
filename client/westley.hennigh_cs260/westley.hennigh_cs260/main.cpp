@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 									 LPSTR lpCmdLine,
 									 int nCmdShow)
 {
-	SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);
+  SillyWindow::GetWindow()->MakeSillyWindow(WndProc, hInstance, nCmdShow);
 	Client::GetClient("UserInfo.txt");  // <--- I feel like there is a better way to do singletons that I should find and learn
 	Client::GetClient()->Connect();
 	// Debug ----------

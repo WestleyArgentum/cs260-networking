@@ -3,6 +3,9 @@
 // CS260 Assignment 2
 // Feb 22th 2010
 
+#ifndef UHG
+#define UHG
+
 #undef UNICODE
 #undef _UNICODE
 //#define WIN32_LEAN_AND_MEAN
@@ -24,7 +27,6 @@ long as it takes on almost any code, just not windows bull.
 struct SillyWindow
 {
 public:
-	static SillyWindow* window;  // singleton
 	static SillyWindow* GetWindow ();
 
 	void MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM), HINSTANCE hInstance, int nCmdShow);
@@ -32,10 +34,14 @@ public:
 	HWND edit;
 	HWND output;
 	HWND listbox;
+  HWND progress;
 
 private:
+
+  static SillyWindow* window;  // singleton
 	SillyWindow ();
 	SillyWindow (const SillyWindow& rhs);
 
 };
 
+#endif

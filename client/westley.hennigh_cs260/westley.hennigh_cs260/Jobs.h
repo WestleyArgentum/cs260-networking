@@ -5,6 +5,7 @@
 
 #include "splitter.h"
 #include "Socket.hpp"
+#include "Window.hpp"
 
 class jobs
 {
