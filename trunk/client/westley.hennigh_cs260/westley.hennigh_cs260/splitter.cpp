@@ -38,9 +38,6 @@ int Data::SplitFile(void)
   vecbuf.resize(MAX_SIZE);
 
   char buffer[MAX_SIZE];
-  // If the buffer wasnt created return memory wasnt found.
-  //if(buffer == NULL)
-  //  return E_NO_MEMORY;
 
   // While the parent file isnt at the end of the file keep in the to break
   //    up the parent file into child files.
@@ -111,11 +108,10 @@ int Data::JoinFiles(void)
   // Until I have seen every inputed file go through them all and take there data.
   for(unsigned i = 0; i < chunks.size(); ++i)
   {
-    char temp[MAX_SIZE];
-    for(unsigned j = 0; j < MAX_SIZE; ++j)
-      temp[j] = chunks[i][j];
-    fwrite(temp, sizeof(char), size, fp_parent);
-    delete [] temp;
+    //char temp[MAX_SIZE];
+    //for(unsigned j = 0; j < MAX_SIZE; ++j)
+    //  temp[j] = chunks[i][j];
+    fwrite(&chunks[i][0], sizeof(char), chunks[i].size(), fp_parent);
   }
 
   /*! Close the parent file, free the buffer, and return home. */
@@ -135,6 +131,10 @@ void Data::SetChunk(std::vector<char>& data, unsigned chunk)
 unsigned Data::GetSize(void)
 {
   return (ceil((float)size/(float)4096));
+}
+unsigned Data::GetChunkSize(void)
+{
+  return chunks.size();
 }
 void Data::ResizeChunk(unsigned size_)
 {
