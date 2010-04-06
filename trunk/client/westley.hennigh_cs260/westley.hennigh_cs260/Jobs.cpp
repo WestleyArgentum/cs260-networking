@@ -53,7 +53,7 @@ void sendJob::end()
 {}
 
 recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize)
-:data(filename, filesize), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_)
+:data(filename, filesize), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), ack(0)
 {
 }
 bool recJob::update()
@@ -70,12 +70,23 @@ bool recJob::update()
 		if (mess->my_type != FileData_Msg)
 			return false;  // something has gone wrong
 
-		data.SetChunk(static_cast<FileDataMsg*>(mess)->data, static_cast<FileDataMsg*>(mess)->chunknum);
+		FileDataMsg* fmsg = static_cast<FileDataMsg*>(mess);
 
-    SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)itoa((data.GetSize()/data.GetChunkSize())*100, buffer_a, 10));
+		// if the packet is new (and therefore relevant)
+		if(fmsg->chunknum > ack)
+		{
+			data.SetChunk(static_cast<FileDataMsg*>(mess)->data, fmsg->chunknum);
+			SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)itoa((data.GetSize()/data.GetChunkSize())*100, buffer_a, 10));
+		
+			// finished check
+			if(fmsg->chunknum >= data.GetSize()-1)
+				done = true;
+		}
 
-    if(static_cast<FileDataMsg*>(mess)->chunknum >= data.GetSize()-1)
-      done = true;
+		// ack the packet received
+		FileDataAckMsg ackmsg;
+		ackmsg.ack = fmsg->chunknum;
+    sSock->Send(&ackmsg);
 
     delete(mess);
 	}

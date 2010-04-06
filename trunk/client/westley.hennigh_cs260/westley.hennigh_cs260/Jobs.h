@@ -55,6 +55,7 @@ class recJob : public jobs
     unsigned loPort;
     std::string IP;
     unsigned rePort;
+		unsigned ack;
 };
 
 #endif //Jobs

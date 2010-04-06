@@ -43,6 +43,7 @@ public:
 
 	// We will maintain a connection over UDP
 	int Connect (unsigned local_port_, std::string remote_ip_, unsigned remote_port_);
+	int Disconnect ();
 
 	unsigned GetLocalPort ();
 
