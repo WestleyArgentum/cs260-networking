@@ -72,8 +72,13 @@ bool recJob::update()
 
 		FileDataMsg* fmsg = static_cast<FileDataMsg*>(mess);
 
+    // ack the packet received
+		FileDataAckMsg ackmsg;
+		ackmsg.ack = fmsg->chunknum;
+    sSock->Send(&ackmsg);
+
 		// if the packet is new (and therefore relevant)
-		if(fmsg->chunknum > ack)
+		if(fmsg->chunknum == ack)
 		{
 			data.SetChunk(static_cast<FileDataMsg*>(mess)->data, fmsg->chunknum);
 			SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)itoa((data.GetSize()/data.GetChunkSize())*100, buffer_a, 10));
@@ -81,12 +86,9 @@ bool recJob::update()
 			// finished check
 			if(fmsg->chunknum >= data.GetSize()-1)
 				done = true;
-		}
 
-		// ack the packet received
-		FileDataAckMsg ackmsg;
-		ackmsg.ack = fmsg->chunknum;
-    sSock->Send(&ackmsg);
+      ++ack;
+		}
 
     delete(mess);
 	}
