@@ -15,8 +15,9 @@ bool sendJob::update()
 
 	// send that message across
   sSock->Send(&message);
+  Sleep(1);
 
-  if(currChunk == data.GetSize()-1)
+  if(currChunk == data.GetSize())
     done = true;
 
 	return done;

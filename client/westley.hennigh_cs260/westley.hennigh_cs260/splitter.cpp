@@ -35,7 +35,7 @@ int Data::SplitFile(void)
 
   // Buffer to move data from the parent to the different children.
   std::vector<char> vecbuf;
-  vecbuf.resize(MAX_SIZE);
+  vecbuf.reserve(MAX_SIZE);
 
   char buffer[MAX_SIZE];
 
@@ -59,7 +59,7 @@ int Data::SplitFile(void)
     if(!temp)
       break;
     for(unsigned i = 0; i<temp; ++i)
-      vecbuf[i] = buffer[i];
+      vecbuf.push_back(buffer[i]);
 
     chunks.push_back(vecbuf);
 
@@ -67,6 +67,7 @@ int Data::SplitFile(void)
     //    hits the end of the parent file, fill the buffer and transfer data.
     for(size_t child_size = temp; child_size < size && (!feof(fp_parent));)
     {
+      vecbuf.clear();
       if(child_size + MAX_SIZE > size)
         temp = fread(buffer, sizeof(char), sizeof(char) * size - child_size, fp_parent);
       else
@@ -74,7 +75,7 @@ int Data::SplitFile(void)
 
       // Writes the buffer into the child currently opened child file.
       for(unsigned i = 0; i<temp; ++i)
-        vecbuf[i] = buffer[i];
+        vecbuf.push_back(buffer[i]);
 
       chunks.push_back(vecbuf);
 
