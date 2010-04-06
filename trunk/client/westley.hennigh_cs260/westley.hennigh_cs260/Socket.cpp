@@ -23,7 +23,7 @@ int ReliableUdpSocet::Send( IMessage* message )
 	unsigned msg_size = message->WriteOut(buffer);
 
 	// loop until sent
-  while(1)
+  /*while(1)
   {
     ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
 		if(ret == SOCKET_ERROR)
@@ -41,21 +41,21 @@ int ReliableUdpSocet::Send( IMessage* message )
       Sleep(1);
       return 0;
     }
-  }
-	//while (GetTickCount() < time + (SEND_TIMEOUT * 1000))
-	//{
-	//	ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
-	//	if(ret == SOCKET_ERROR)
-	//	{
-	//		ret = WSAGetLastError();
-	//		return ret;
-	//	}
+  }*/
+	while (GetTickCount() < time + (SEND_TIMEOUT * 1000))
+	{
+		ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
+		if(ret == SOCKET_ERROR)
+		{
+			ret = WSAGetLastError();
+			return ret;
+		}
 
-	//	if(PollForAck(socket, remoteAddress, 500) == 1)
-	//		return 0;  // that means the packet was sent :)
-	//	else
-	//		return -1;  // there was a problem while polling
-	//}
+		if(PollForAck(socket, remoteAddress, 500) == 1)
+			return 0;  // that means the packet was sent :)
+		//else
+			//return -1;  // there was a problem while polling
+	}
 
 	return -1;
 }
