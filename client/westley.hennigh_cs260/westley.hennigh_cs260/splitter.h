@@ -27,6 +27,7 @@ class Data
   private:
     std::vector<std::vector<char>> chunks;
     size_t size;
+    FILE *fp_parent;
 };
 
 #endif
