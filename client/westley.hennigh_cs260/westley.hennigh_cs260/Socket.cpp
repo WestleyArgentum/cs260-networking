@@ -133,6 +133,11 @@ int ReliableUdpSocet::Connect( unsigned local_port_, std::string remote_ip_, uns
 	return 0;
 }
 
+int ReliableUdpSocet::Disconnect()
+{
+	return 0;  //^! this should probably be set up
+}
+
 unsigned ReliableUdpSocet::GetLocalPort()
 {
 	return local_port;
