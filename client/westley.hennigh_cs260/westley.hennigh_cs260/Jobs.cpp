@@ -73,9 +73,9 @@ bool recJob::update()
 		FileDataMsg* fmsg = static_cast<FileDataMsg*>(mess);
 
     // ack the packet received
-		FileDataAckMsg ackmsg;
+		/*FileDataAckMsg ackmsg;
 		ackmsg.ack = fmsg->chunknum;
-    sSock->Send(&ackmsg);
+    sSock->Send(&ackmsg);*/
 
 		// if the packet is new (and therefore relevant)
 		if(fmsg->chunknum == ack)
