@@ -93,6 +93,10 @@ int Data::SplitFile(void)
 /******************************************************************************/
 int Data::JoinFiles(void)
 {
+  size_t found;
+  found = filename.find_last_of("\\");
+  filename = filename.substr(found+1);
+
   // Create a pointer to the parent file and opens it.
   fp_parent = fopen(filename.c_str(), "wb");
 
@@ -103,12 +107,7 @@ int Data::JoinFiles(void)
 
   // Until I have seen every inputed file go through them all and take there data.
   for(unsigned i = 0; i < chunks.size(); ++i)
-  {
-    //char temp[MAX_SIZE];
-    //for(unsigned j = 0; j < MAX_SIZE; ++j)
-    //  temp[j] = chunks[i][j];
     fwrite(&chunks[i][0], sizeof(char), chunks[i].size(), fp_parent);
-  }
 
   return 0;
 }
