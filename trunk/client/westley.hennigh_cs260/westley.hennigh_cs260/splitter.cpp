@@ -7,10 +7,11 @@ Data::~Data()
 {
   std::vector<char>* temp;
   for(unsigned i = 0; i < chunks.size(); ++i)
-  {
     chunks[i].clear();
-  }
   chunks.clear();
+
+  // Close the parent file, free the buffer, and return home.
+  fclose(fp_parent);
 }
 /******************************************************************************/
 /*
@@ -27,7 +28,7 @@ int Data::SplitFile(void)
   char current_file_name[256];
 
   // Create a pointer to the parent file and opens it.
-  FILE *fp_parent = fopen(filename.c_str(), "rb");
+  fp_parent = fopen(filename.c_str(), "rb");
   // If the parent file wasnt open free your memory and return
   //    bad source file.
   if(!fp_parent)
@@ -47,13 +48,9 @@ int Data::SplitFile(void)
     // Do the first check before creating a file, if not preformed a file of
     //    0 bytes will be created on evenly split files.
     if(size < MAX_SIZE)
-    {
       temp = fread(buffer, sizeof(char), sizeof(char) * size, fp_parent);
-    }
     else
-    {
       temp = fread(buffer, sizeof(char), sizeof(char) * MAX_SIZE, fp_parent);
-    }
 
     // If nothing is loaded on the first fread break out of the loop.
     if(!temp)
@@ -83,8 +80,6 @@ int Data::SplitFile(void)
       child_size += temp;
     }
   }
-  // Close the parent file, free the buffer, and return home.
-  fclose(fp_parent);
   return 0;
 }
 
@@ -99,7 +94,7 @@ int Data::SplitFile(void)
 int Data::JoinFiles(void)
 {
   // Create a pointer to the parent file and opens it.
-  FILE *fp_parent = fopen(filename.c_str(), "wb");
+  fp_parent = fopen(filename.c_str(), "wb");
 
   // If the parent file wasnt open free your memory and return
   //   bad source file.
@@ -115,8 +110,6 @@ int Data::JoinFiles(void)
     fwrite(&chunks[i][0], sizeof(char), chunks[i].size(), fp_parent);
   }
 
-  /*! Close the parent file, free the buffer, and return home. */
-  fclose(fp_parent);
   return 0;
 }
 std::vector<char> Data::GetChunk(unsigned chunk)
