@@ -67,10 +67,9 @@ recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned
 :data(filename, filesize), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), ack(0)
 {
 }
+
 bool recJob::update()
-{
-  static unsigned timeout = GetTickCount();
-  
+{ 
   // if it has been more than 25 sec since we got a message they are probably gone...
   if(GetTickCount() > timeout + 25000)
     done = true;
@@ -123,6 +122,8 @@ void recJob::start()
 {
   // set up our session with the socket
   static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
+
+  timeout = GetTickCount();
 }
 
 void recJob::end()
