@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include "splitter.h"
+#include "Client.hpp"
 
 Data::~Data()
 {
@@ -96,7 +97,7 @@ int Data::JoinFiles(void)
 {
   size_t found;
   found = filename.find_last_of("\\");
-  filename = filename.substr(found+1);
+  filename = Client::GetClient()->path + filename.substr(found+1);
 
   // Create a pointer to the parent file and opens it.
   fp_parent = fopen(filename.c_str(), "wb");
