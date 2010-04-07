@@ -11,7 +11,8 @@ Data::~Data()
   chunks.clear();
 
   // Close the parent file, free the buffer, and return home.
-  fclose(fp_parent);
+  if(fp_parent)
+    fclose(fp_parent);
 }
 /******************************************************************************/
 /*
