@@ -3,6 +3,8 @@
 sendJob::sendJob(std::string filename, unsigned filesize, unsigned loPort_, std::string remoteuser, std::string IP_ /*= std::string()*/, unsigned rePort_ /*= 0*/ )
 :data(filename, filesize), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), currChunk(0), remote_user(remoteuser)
 {
+  // set up the data object
+	data.SplitFile();
 }
 
 bool sendJob::update()
@@ -47,9 +49,6 @@ void sendJob::start()
 {
   // set up our session with the socket
   static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
-
-  // set up the data object
-	data.SplitFile();
 }
 
 void sendJob::end()
@@ -66,8 +65,8 @@ recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned
 bool recJob::update()
 { 
   // if it has been more than 25 sec since we got a message they are probably gone...
-  //if(GetTickCount() > timeout + 25000)
-    //done = true;
+  if(GetTickCount() > timeout + 25000)
+    done = true;
 
   IMessage* mess;
   mess = sSock->Recv();
