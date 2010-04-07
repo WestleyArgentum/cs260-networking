@@ -25,9 +25,6 @@ bool sendJob::update()
 void sendJob::SetSocket(SuperSocket* sSock_)
 {
   sSock = sSock_;
-
-	// set up our session with the socket
-  static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
 
 sendJob::~sendJob()
@@ -46,11 +43,18 @@ void sendJob::SetRemoteInfo( std::string IP_, unsigned rePort_ )
 
 void sendJob::start()
 {
+  // set up our session with the socket
+  static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
+
+  // set up the data object
 	data.SplitFile();
 }
 
 void sendJob::end()
-{}
+{
+  // terminate
+  static_cast<ReliableUdpSocet*>(sSock)->Disconnect();
+}
 
 recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned rePort_, unsigned filesize)
 :data(filename, filesize), sSock(NULL), loPort(loPort_), IP(IP_), rePort(rePort_), ack(0)
@@ -93,18 +97,22 @@ bool recJob::update()
 void recJob::SetSocket(SuperSocket* sSock_)
 {
   sSock = sSock_;
-
-	// set up our session with the socket
-  static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
 }
 
 recJob::~recJob()
 {}
 
 void recJob::start()
-{}
+{
+  // set up our session with the socket
+  static_cast<ReliableUdpSocet*>(sSock)->Connect(loPort, IP, rePort);
+}
 
 void recJob::end()
 {
+  // terminate
+  static_cast<ReliableUdpSocet*>(sSock)->Disconnect();
+
+  // unite!
 	data.JoinFiles();
 }
