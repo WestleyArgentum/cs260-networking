@@ -13,6 +13,11 @@ bool sendJob::update()
 	message.chunknum = currChunk;
   ++currChunk;
 
+  char char_percent[16];
+  float float_percent = ((float)data.GetChunkSize()/(float)data.GetSize())*100.0f;
+  sprintf(char_percent, "%f", float_percent);
+	SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)(char_percent));
+
 	// send that message across
   if(sSock->Send(&message) == -1)
     done = true;  // they left... what to do?
