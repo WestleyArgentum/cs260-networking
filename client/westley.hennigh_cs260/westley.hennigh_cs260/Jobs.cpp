@@ -18,6 +18,7 @@ bool sendJob::update()
 	// send that message across
   if(sSock->Send(&message) == -1)
   {
+    MessageBox(NULL, "I have timed out while waiting for an ack.\nMaybe they left?", "TIMED OUT !!!", MB_OK | MB_ICONHAND);
     done = true;  // they left... what to do?
   }
 
@@ -67,7 +68,7 @@ recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned
 bool recJob::update()
 { 
   // if it has been more than 25 sec since we got a message they are probably gone...
-  if(GetTickCount() > timeout + 25000)
+  if(GetTickCount() > timeout + 15000)
   {
     MessageBox(NULL, "I have timed out while waiting for a packet.", "TIMED OUT !!!", MB_OK | MB_ICONHAND);
     done = true;
