@@ -45,6 +45,7 @@ public:
 
 	//^! hacked to get this working -----
 	unsigned udp_port;
+  std::string path;
 	// ------
 	
 private:
