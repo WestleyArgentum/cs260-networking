@@ -89,7 +89,7 @@ bool recJob::update()
 			data.SetChunk(static_cast<FileDataMsg*>(mess)->data, fmsg->chunknum);
       char char_percent[16];
       float float_percent = ((float)data.GetChunkSize()/(float)data.GetSize())*100.0f;
-      sprintf(char_percent, "%f", float_percent);
+      sprintf(char_percent, "%f Percent", float_percent);
 			SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)(char_percent));
 		
 			// finished check
