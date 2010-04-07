@@ -132,7 +132,9 @@ int ReliableUdpSocet::Connect( unsigned local_port_, std::string remote_ip_, uns
 
 int ReliableUdpSocet::Disconnect()
 {
-	ret = shutdown(clientSocket, SD_SEND);
+  int ret;
+
+	ret = shutdown(socket, SD_SEND);
 	if(ret == SOCKET_ERROR){
 		ret = WSAGetLastError();
 		return ret;
@@ -140,10 +142,10 @@ int ReliableUdpSocet::Disconnect()
 
 	//clean up the socket.  Technically, WSACleanup will do this for you
 	//but it's good to get in the habit of closing your own sockets.
-	ret = closesocket(clientSocket);
+	ret = closesocket(socket);
 	if(ret == SOCKET_ERROR){
 		ret = WSAGetLastError();
-		return ret;
+    return ret;
 	}
 
   return 0;
