@@ -54,7 +54,7 @@ int ReliableUdpSocet::Send( IMessage* message )
 			return ret;
 		}
 
-		if(PollForAck(socket, remoteAddress, 500) == 1)
+		if(PollForAck(socket, remoteAddress, 1000) == 1)
 			return 0;  // that means the packet was sent :)
     else
     {
@@ -184,8 +184,11 @@ int PollForAck( SOCKET sock, sockaddr_in remote, unsigned millisec )
 	{
 		int count = recvfrom(sock, buffer, STD_BUFF_SIZE, 0, (SOCKADDR*)&remoteAddress, &remoteAddresslength);
 		if(count == SOCKET_ERROR)
-			return -1;
-		else
+		{
+			if(WSAGetLastError() != WSAEWOULDBLOCK)
+				return -1;
+		}
+		else if(count)
 		{
 			//^! right now we do not have an ack param to check with so we assume they wanted to confirm delivery.
 
