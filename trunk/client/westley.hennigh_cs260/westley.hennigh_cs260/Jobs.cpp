@@ -71,8 +71,8 @@ recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned
 bool recJob::update()
 { 
   // if it has been more than 25 sec since we got a message they are probably gone...
-  if(GetTickCount() > timeout + 25000)
-    done = true;
+  //if(GetTickCount() > timeout + 25000)
+    //done = true;
 
   IMessage* mess;
   mess = sSock->Recv();
