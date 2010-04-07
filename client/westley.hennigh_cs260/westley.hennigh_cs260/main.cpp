@@ -173,6 +173,17 @@ int WINAPI WinMain(HINSTANCE hInstance,
 					{
 						if (pendingsendjobs[i]->GetRemoteUser() == mess->recipient)  // this is the job being accepted
 						{
+              // prompt the user telling them transfer was accepted
+							the_conversation.append("File Transfer Accepted <3");
+							the_conversation.append("\r\n");
+
+							SendMessage(SillyWindow::GetWindow()->output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
+
+							// scroll the bar to the bottom
+							unsigned linecount = SendMessage(SillyWindow::GetWindow()->output, EM_GETLINECOUNT, 0, 0);
+							SendMessage(SillyWindow::GetWindow()->output, EM_LINESCROLL, 0, linecount);
+							break;
+
 							// set up job
 							pendingsendjobs[i]->SetRemoteInfo(mess->ip_address, mess->port);
 
@@ -182,15 +193,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 							// remove job
 							pendingsendjobs.erase(pendingsendjobs.begin() + i);
 
-							// prompt the user telling them transfer was accepted
-							the_conversation.append("File Transfer Accepted <3");
-							the_conversation.append("\r\n");
-
-							SendMessage(SillyWindow::GetWindow()->output, WM_SETTEXT, 0, (LPARAM)the_conversation.c_str());
-
-							// scroll the bar to the bottom
-							unsigned linecount = SendMessage(SillyWindow::GetWindow()->output, EM_GETLINECOUNT, 0, 0);
-							SendMessage(SillyWindow::GetWindow()->output, EM_LINESCROLL, 0, linecount);
 							break;
 						}
 					}
@@ -325,8 +327,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int FileSize = ftell(pFile);
             fclose(pFile);
 
+            // load in everything... prompt user to wait
+            SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)("Verifying file. Please do not close the window. Will notify when finished :)"));
+
 						// create a pending job, then send a request for a file transfer to the other client
 						FileTransferThread::GetInstance()->pending_sendjobs.push_back(new sendJob(FileName, FileSize, Client::GetClient()->udp_port, pidgin));
+            
+            SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)("File verified, now requesting send."));
 
 						// grab our ip address -----
 						hostent* localhost;

@@ -162,7 +162,7 @@ void SillyWindow::MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, L
 		20, 
 		350,
 		100, 
-		30,
+		100,
 		hWnd,//same parent window as before
 		NULL,
 		hInstance,
