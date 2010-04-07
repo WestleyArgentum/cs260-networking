@@ -14,8 +14,10 @@ bool sendJob::update()
   ++currChunk;
 
 	// send that message across
-  sSock->Send(&message);
-  Sleep(1);
+  if(sSock->Send(&message) == -1)
+    done = true;  // they left... what to do?
+
+  Sleep(1);  // we dont keep a page size so this makes things cleaner
 
   if(currChunk == data.GetSize())
     done = true;
@@ -62,6 +64,12 @@ recJob::recJob(std::string filename, unsigned loPort_, std::string IP_, unsigned
 }
 bool recJob::update()
 {
+  static unsigned timeout = GetTickCount();
+  
+  // if it has been more than 25 sec since we got a message they are probably gone...
+  if(GetTickCount() > timeout + 25000)
+    done = true;
+
   IMessage* mess;
   mess = sSock->Recv();
 
@@ -69,6 +77,9 @@ bool recJob::update()
 
 	if(mess)
 	{
+    // reset the timeout
+    timeout = GetTickCount();
+
 		if (mess->my_type != FileData_Msg)
 			return false;  // something has gone wrong
 

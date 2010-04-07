@@ -34,10 +34,6 @@ int ReliableUdpSocet::Send( IMessage* message )
 
 		if(PollForAck(socket, remoteAddress, 1000) == 1)
 			return 0;  // that means the packet was sent :)
-    else
-    {
-      int i = 5;
-    }
 
 		//else
 			//return -1;  // there was a problem while polling
