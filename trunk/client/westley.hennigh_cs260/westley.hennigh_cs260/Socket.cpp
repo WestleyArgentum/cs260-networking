@@ -185,7 +185,6 @@ int PollForAck( SOCKET sock, sockaddr_in remote, unsigned millisec )
 			//^! check to see that it came from the right remote socket
 			return 1;
 		}
-	}
-  MessageBox(NULL, "I have timed out while waiting for an ack.\nMaybe they left?", "TIMED OUT !!!", MB_OK | MB_ICONHAND);
+  }
 	return 0;
 }
