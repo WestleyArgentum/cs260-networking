@@ -65,8 +65,6 @@ bool recJob::update()
   IMessage* mess;
   mess = sSock->Recv();
 
-  char buffer_a[10];
-
   unsigned stuff = data.GetSize();
 
 	if(mess)
@@ -80,7 +78,10 @@ bool recJob::update()
 		if(fmsg->chunknum == ack)
 		{
 			data.SetChunk(static_cast<FileDataMsg*>(mess)->data, fmsg->chunknum);
-			SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)itoa((data.GetSize()/data.GetChunkSize())*100, buffer_a, 10));
+      char char_percent[16];
+      float float_percent = ((float)data.GetChunkSize()/(float)data.GetSize())*100.0f;
+      sprintf(char_percent, "%f", float_percent);
+			SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)(char_percent));
 		
 			// finished check
 			if(fmsg->chunknum >= data.GetSize()-1)
