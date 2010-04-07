@@ -327,12 +327,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             fclose(pFile);
 
             // load in everything... prompt user to wait
-            SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)("Verifying file. Please do not close the window. Will notify when finished :)"));
+            MessageBox(NULL, "Verifying file. Please do not close the window. Will notify when finished :)", "Verifying file", MB_OK | MB_ICONASTERISK);
 
 						// create a pending job, then send a request for a file transfer to the other client
 						FileTransferThread::GetInstance()->pending_sendjobs.push_back(new sendJob(FileName, FileSize, Client::GetClient()->udp_port, pidgin));
             
-            SendMessage(SillyWindow::GetWindow()->progress, WM_SETTEXT, 0, (LPARAM)("File verified, now requesting send."));
+            MessageBox(NULL, "File verified, now requesting send.", "File verified", MB_OK | MB_ICONASTERISK);
 
 						// grab our ip address -----
 						hostent* localhost;
