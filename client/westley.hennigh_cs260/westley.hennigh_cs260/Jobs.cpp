@@ -17,7 +17,9 @@ bool sendJob::update()
 
 	// send that message across
   if(sSock->Send(&message) == -1)
+  {
     done = true;  // they left... what to do?
+  }
 
   Sleep(1);  // we dont keep a page size so this makes things cleaner
 
@@ -66,7 +68,10 @@ bool recJob::update()
 { 
   // if it has been more than 25 sec since we got a message they are probably gone...
   if(GetTickCount() > timeout + 25000)
+  {
+    MessageBox(NULL, "I have timed out while waiting for a packet.", "TIMED OUT !!!", MB_OK | MB_ICONHAND);
     done = true;
+  }
 
   IMessage* mess;
   mess = sSock->Recv();
@@ -79,7 +84,9 @@ bool recJob::update()
     timeout = GetTickCount();
 
 		if (mess->my_type != FileData_Msg)
+    {
 			return false;  // something has gone wrong
+    }
 
 		FileDataMsg* fmsg = static_cast<FileDataMsg*>(mess);
 
