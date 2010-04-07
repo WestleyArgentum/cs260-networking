@@ -159,10 +159,10 @@ void SillyWindow::MakeSillyWindow(LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, L
 		_T("EDIT"),
 		NULL,
 		WS_VISIBLE | WS_CHILD | ES_READONLY | WS_BORDER, //adding readonly for this one
-		20, 
-		350,
-		100, 
-		100,
+		150, 
+		420,
+		500, 
+		20,
 		hWnd,//same parent window as before
 		NULL,
 		hInstance,
