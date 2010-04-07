@@ -23,28 +23,6 @@ int ReliableUdpSocet::Send( IMessage* message )
 	unsigned msg_size = message->WriteOut(buffer);
 
 	// loop until sent
-  /*while(1)
-  {
-    ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
-		if(ret == SOCKET_ERROR)
-		{
-			ret = WSAGetLastError();
-			return ret;
-		}
-
-    int remoteAddresslength = sizeof(remoteAddress);
-    int count = recvfrom(socket, muffler, STD_BUFF_SIZE, 0, (SOCKADDR*)&remoteAddress, &remoteAddresslength);
-		if(count == SOCKET_ERROR)
-			return -1;
-    else if(count)
-    {
-      Sleep(1);
-      return 0;
-    }
-  }*/
-
-
-
 	while (GetTickCount() < time + (SEND_TIMEOUT * 1000))
 	{
 		ret = sendto(socket, buffer, msg_size, 0, (sockaddr*)&remoteAddress, sizeof(remoteAddress));
@@ -154,7 +132,21 @@ int ReliableUdpSocet::Connect( unsigned local_port_, std::string remote_ip_, uns
 
 int ReliableUdpSocet::Disconnect()
 {
-	return 0;  //^! this should probably be set up
+	ret = shutdown(clientSocket, SD_SEND);
+	if(ret == SOCKET_ERROR){
+		ret = WSAGetLastError();
+		return ret;
+	}
+
+	//clean up the socket.  Technically, WSACleanup will do this for you
+	//but it's good to get in the habit of closing your own sockets.
+	ret = closesocket(clientSocket);
+	if(ret == SOCKET_ERROR){
+		ret = WSAGetLastError();
+		return ret;
+	}
+
+  return 0;
 }
 
 unsigned ReliableUdpSocet::GetLocalPort()
