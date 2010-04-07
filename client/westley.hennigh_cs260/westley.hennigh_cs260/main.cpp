@@ -182,7 +182,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 							// scroll the bar to the bottom
 							unsigned linecount = SendMessage(SillyWindow::GetWindow()->output, EM_GETLINECOUNT, 0, 0);
 							SendMessage(SillyWindow::GetWindow()->output, EM_LINESCROLL, 0, linecount);
-							break;
 
 							// set up job
 							pendingsendjobs[i]->SetRemoteInfo(mess->ip_address, mess->port);
